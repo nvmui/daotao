@@ -1,0 +1,2 @@
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="uc_footer.ascx.cs" Inherits="control_uc_footer" %>
+<asp:image id="Image1" runat="server" imageurl="~/RLCTCT/img/footer_bg.png" width="100%" Height="100%" />

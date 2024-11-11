@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/RLCTCT/renluyen.Master" AutoEventWireup="true" CodeFile="frm_ChamDiemRL.aspx.cs" Inherits="RLCTCT_frm_ChamDiemRL" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/RLCTCT/renluyen.master" AutoEventWireup="true" CodeFile="frm_DSLopDuyet.aspx.cs" Inherits="RLCTCT_frm_DSLopDuyet" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <style type="text/css">
@@ -8,7 +8,7 @@
         }
     </style>
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
     <div class="container  justify-content-center" style="margin: auto; font-family: 'Times New Roman', Times, serif">
         <div class="row text-center">
             <br />
@@ -24,21 +24,17 @@
                     <fieldset id="fld_diem_dg" runat="server" visible="true" class="text-center">
                         <table border="1px" align="center" style="width: 100%">
                             <tr>
-                                <th rowspan="2" style="width: 5%; text-align: center">STT</th>
-                                <th rowspan="2" style="width: 35%; text-align: center">Đợt đánh giá</th>
-                                <th colspan="4" style="width: 40%; text-align: center">Điểm</th>
-                                <th rowspan="2" style="width: 10%; text-align: center">Xếp loại</th>
-                                <th rowspan="2" style="width: 10%; text-align: center">Tình trạng</th>
-                            </tr>
+                                <th style="width: 5%; text-align: center">STT</th>
+                                <th style="width: 35%; text-align: center">Đợt đánh giá</th>
+                                <th style="width: 40%; text-align: center">Bắt đầu</th>
+                                <th style="width: 10%; text-align: center">Ngày khóa</th>
+                                <th style="width: 10%; text-align: center">Học Kỳ</th>
+                                <th style="width: 10%; text-align: center">Năm Học</th>
+                                <th style="width: 10%; text-align: center">Tình trạng</th>
+                            </tr>                            
                             <tr>
-                                <th style="width: 10%; text-align: center">SV chấm</th>
-                                <th style="width: 10%; text-align: center">Thông qua lớp</th>
-                                <th style="width: 10%; text-align: center">Thông qua khoa</th>
-                                <th style="width: 10%; text-align: center">Thông qua PCTCT</th>
-                            </tr>
-                            <tr>
-                                <td colspan="11">
-                                    <asp:GridView ID="grv_diemth" runat="server" DataKeyNames="MA_SINH_VIEN" AutoGenerateColumns="False" ShowHeader="False" Width="100%">
+                                <td colspan="7">
+                                    <asp:GridView ID="grv_diemth" runat="server" DataKeyNames="id" AutoGenerateColumns="False" ShowHeader="False" Width="100%">
                                         <Columns>
                                             <asp:TemplateField HeaderText="STT" HeaderStyle-CssClass="danger" HeaderStyle-HorizontalAlign="Center">
                                                 <ItemTemplate>
@@ -50,7 +46,7 @@
                                             </asp:TemplateField>
                                             <asp:TemplateField HeaderText="Kỳ đánh giá" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
                                                 <ItemTemplate>
-                                                    <asp:Label runat="server" Text='<%# Eval("NOIDUNGDG") %>' />
+                                                    <asp:Label runat="server" Text='<%# Eval("DotDanhGia") %>' />
                                                 </ItemTemplate>
                                                 <ControlStyle Font-Size="Medium"></ControlStyle>
                                                 <HeaderStyle HorizontalAlign="Center"></HeaderStyle>
@@ -58,39 +54,31 @@
                                             </asp:TemplateField>
                                             <asp:TemplateField HeaderText="DiemTC" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
                                                 <ItemTemplate>
-                                                    <asp:Label runat="server" Text='<%# Eval("DIEMTC") %>' />
+                                                    <asp:Label runat="server" Text='<%# Eval("NgayBatDau") %>' />
                                                 </ItemTemplate>
                                                 <ControlStyle Font-Size="Medium"></ControlStyle>
                                                 <HeaderStyle HorizontalAlign="Center"></HeaderStyle>
                                                 <ItemStyle Width="10%" CssClass="text-center" />
                                             </asp:TemplateField>
-                                            <asp:TemplateField HeaderText="KiemLOP" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
+                                            <asp:TemplateField HeaderText="DiemTC" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
                                                 <ItemTemplate>
-                                                    <asp:Label runat="server" Text='<%# Eval("DIEMLOP") %>' />
+                                                    <asp:Label runat="server" Text='<%# Eval("NgayKhoa") %>' />
                                                 </ItemTemplate>
                                                 <ControlStyle Font-Size="Medium"></ControlStyle>
                                                 <HeaderStyle HorizontalAlign="Center"></HeaderStyle>
                                                 <ItemStyle Width="10%" CssClass="text-center" />
                                             </asp:TemplateField>
-                                            <asp:TemplateField HeaderText="DiemKhoa" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
+                                            <asp:TemplateField HeaderText="DiemTC" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
                                                 <ItemTemplate>
-                                                    <asp:Label runat="server" Text='<%# Eval("DIEMKHOA") %>' />
+                                                    <asp:Label runat="server" Text='<%# Eval("Ky_Hoc") %>' />
                                                 </ItemTemplate>
                                                 <ControlStyle Font-Size="Medium"></ControlStyle>
                                                 <HeaderStyle HorizontalAlign="Center"></HeaderStyle>
                                                 <ItemStyle Width="10%" CssClass="text-center" />
                                             </asp:TemplateField>
-                                            <asp:TemplateField HeaderText="DiemCTCT" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
+                                            <asp:TemplateField HeaderText="DiemTC" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
                                                 <ItemTemplate>
-                                                    <asp:Label runat="server" Text='<%# Eval("DIEMCTCT") %>' Width="10%" CssClass="text-right" />
-                                                </ItemTemplate>
-                                                <ControlStyle Font-Size="Medium"></ControlStyle>
-                                                <HeaderStyle HorizontalAlign="Center"></HeaderStyle>
-                                                <ItemStyle Width="10%" CssClass="text-center" />
-                                            </asp:TemplateField>
-                                            <asp:TemplateField HeaderText="Xếp Loại" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
-                                                <ItemTemplate>
-                                                    <asp:Label runat="server" Text='<%# Eval("XEP_LOAI") %>' Width="10%" CssClass="text-right" />
+                                                    <asp:Label runat="server" Text='<%# Eval("NamHoc") %>' />
                                                 </ItemTemplate>
                                                 <ControlStyle Font-Size="Medium"></ControlStyle>
                                                 <HeaderStyle HorizontalAlign="Center"></HeaderStyle>
@@ -98,7 +86,7 @@
                                             </asp:TemplateField>
                                             <asp:TemplateField HeaderText="Tinh trạng" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
                                                 <ItemTemplate>
-                                                    <asp:Label runat="server" Text='' Width="10%" CssClass="text-right" />
+                                                    <asp:Label runat="server" Text='<%# Eval("TrangThai") %>' Width="10%" CssClass="text-right" />
                                                 </ItemTemplate>
                                                 <ControlStyle Font-Size="Medium"></ControlStyle>
                                                 <HeaderStyle HorizontalAlign="Center"></HeaderStyle>

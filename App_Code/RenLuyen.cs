@@ -44,6 +44,36 @@ public class RenLuyen
         conn.Close();
         return dtb;
     }
+    //Lấy thông tin lớp duyệt
+    public DataTable rl_dsLopDuyet(string user)
+    {
+        cmd = new SqlCommand("rl_getCanBoLopCham", conn);
+        cmd.CommandType = CommandType.StoredProcedure;
+        cmd.Parameters.Add("@masv", SqlDbType.NVarChar, 12);
+        cmd.Parameters["@masv"].Value = user;
+        conn.Open();
+        da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataTable dtb = new DataTable();
+        da.Fill(dtb);
+        conn.Close();
+        return dtb;
+    }
+    //Lấy danh sách lớp duyệt
+    public DataTable rl_GetLopCham(int id)
+    {
+        cmd = new SqlCommand("rl_GetLopCham", conn);
+        cmd.CommandType = CommandType.StoredProcedure;
+        cmd.Parameters.Add("@id", SqlDbType.Int);
+        cmd.Parameters["@id"].Value = id;
+        conn.Open();
+        da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataTable dtb = new DataTable();
+        da.Fill(dtb);
+        conn.Close();
+        return dtb;
+    }
     //Lấy phiếu chậm điểm rèn luyện
     public DataTable rl_get_PhieuRenLuyen(string user, string ky)
     {

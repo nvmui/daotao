@@ -104,26 +104,37 @@ begin
 	end
 end
 ----
-create proc rl_getCanBoLopCham
+alter proc rl_getCanBoLopCham
 @masv varchar(12)
 as
 begin
-	SELECT id, Lop, Ky_Hoc, NamHoc, DotDanhGia, NgayBatDau, NgayKhoa,
-	(case TrangThai when 0 then N'Chưa duyệt' when 1 then N'Đã duyệt' else N'Đã khóa' end) as TrangThai , NguoiDuyet
+	SELECT id, Lop, Ky_Hoc, NamHoc, DotDanhGia, NgayBatDau, NgayKhoa,TrangThai,
+	(case TrangThai when 0 then N'Chưa duyệt' when 1 then N'Đã duyệt' else N'Đã khóa' end) as TrangThais , NguoiDuyet
 	FROM   RL_DSLopCham
 	WHERE NguoiDuyet = @masv
 end
 ---
-create proc rl_KhoiTaoCham
+alter proc rl_KhoiTaoCham
 @KY_HOC varchar(3),
 @NOIDUNGDG nvarchar(150),
 @Khoa varchar(5)
 as
 begin
-	INSERT INTO RL_DIEM_TH_RENLUYEN(MA_SINH_VIEN,HOTEN,NGAY_SINH,LOP,KY_HOC,NOIDUNGDG,NGAYTAO)
-	select MA_SINH_VIEN, HO_LOT+' '+TEN, NGAY_SINH, LOP, @KY_HOC, @NOIDUNGDG,GETDATE() from D_HO_SO_SINH_VIEN 
+	INSERT INTO RL_DIEM_TH_RENLUYEN(MA_SINH_VIEN,HO_LOT, TEN,NGAY_SINH,LOP,KY_HOC,NOIDUNGDG,NGAYTAO)
+	select MA_SINH_VIEN, HO_LOT, TEN, NGAY_SINH, LOP, @KY_HOC, @NOIDUNGDG,GETDATE() from D_HO_SO_SINH_VIEN 
 	where RIGHT(lop,2)=@Khoa and ThoiHoc=0 and TamNgung=0 and 
 	MA_SINH_VIEN not in (select MA_SINH_VIEN from RL_DIEM_TH_RENLUYEN where KY_HOC=@KY_HOC)
 end
 
 --exec rl_KhoiTaoCham '241',N'Chấm điểm rèn luyện kỳ 1 năm học 2024-2025','22'
+alter proc rl_GetLopCham
+@id int
+as
+begin
+	declare @lop varchar(20), @kyhoc varchar(3)
+	set @lop = (select Lop from RL_DSLopCham where id=@id)
+	set @kyhoc = (select Ky_hoc from RL_DSLopCham where id=@id)
+	select HO_LOT+' '+TEN as HOTEN, * from RL_DIEM_TH_RENLUYEN where LOP = @lop and KY_HOC= @kyhoc order by TEN, HO_LOT
+end
+
+--exec rl_GetLopCham 54

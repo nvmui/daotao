@@ -113,93 +113,107 @@
                     </fieldset>
                 </fieldset>
                 <fieldset id="fld_dslop" runat="server" visible="false">
+                    <asp:Label ID="lbl_dslop" runat="server"></asp:Label>
                     <table border="1px" align="center" style="width: 100%">
-                            <tr>
-                                <th rowspan="2" style="width: 5%; text-align: center">STT</th>
-                                <th rowspan="2" style="width: 10%; text-align: center">Mã sinh viên</th>
-                                <th rowspan="2" style="width: 10%; text-align: center">Họ và tên</th>
-                                <th rowspan="2" style="width: 10%; text-align: center">Ngày sinh</th>
-                                <th colspan="4" style="width: 40%; text-align: center">Điểm</th>
-                                <th rowspan="2" style="width: 10%; text-align: center">Xếp loại</th>
-                                <th rowspan="2" style="width: 10%; text-align: center">Tình trạng</th>
-                            </tr>
-                            <tr>
-                                <th style="width: 10%; text-align: center">SV chấm</th>
-                                <th style="width: 10%; text-align: center">Thông qua lớp</th>
-                                <th style="width: 10%; text-align: center">Thông qua khoa</th>
-                                <th style="width: 10%; text-align: center">Thông qua PCTCT</th>
-                            </tr>
-                            <tr>
-                                <td colspan="11">
-                                    <asp:GridView ID="grv_dsLop" runat="server" DataKeyNames="MA_SINH_VIEN" AutoGenerateColumns="False" ShowHeader="False" Width="100%" OnRowCommand="grv_dsLop_RowCommand">
-                                        <Columns>
-                                            <asp:TemplateField HeaderText="STT" HeaderStyle-CssClass="danger" HeaderStyle-HorizontalAlign="Center">
-                                                <ItemTemplate>
-                                                    <%# Container.DataItemIndex + 1 %>
-                                                </ItemTemplate>
-                                                <ControlStyle BorderStyle="Solid" />
-                                                <HeaderStyle HorizontalAlign="Center" CssClass="danger"></HeaderStyle>
-                                                <ItemStyle Width="5%" CssClass="text-center" BorderStyle="Solid" />
-                                            </asp:TemplateField>
-                                            <asp:BoundField DataField="MA_SINH_VIEN" HeaderText="Mã sinh viên" />
-                                            <asp:BoundField DataField="HOTEN" HeaderText="Họ và Tên" />
-                                            <asp:BoundField DataField="NGAY_SINH" HeaderText="Ngày sinh" />
-                                            <asp:TemplateField HeaderText="DiemTC" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
-                                                <ItemTemplate>
-                                                    <asp:Label runat="server" Text='<%# Eval("DIEMTC") %>' />
-                                                </ItemTemplate>
-                                                <ControlStyle Font-Size="Medium"></ControlStyle>
-                                                <HeaderStyle HorizontalAlign="Center"></HeaderStyle>
-                                                <ItemStyle Width="10%" CssClass="text-center" />
-                                            </asp:TemplateField>
-                                            <asp:TemplateField HeaderText="KiemLOP" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
-                                                <ItemTemplate>
-                                                    <asp:Label runat="server" Text='<%# Eval("DIEMLOP") %>' />
-                                                </ItemTemplate>
-                                                <ControlStyle Font-Size="Medium"></ControlStyle>
-                                                <HeaderStyle HorizontalAlign="Center"></HeaderStyle>
-                                                <ItemStyle Width="10%" CssClass="text-center" />
-                                            </asp:TemplateField>
-                                            <asp:TemplateField HeaderText="DiemKhoa" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
-                                                <ItemTemplate>
-                                                    <asp:Label runat="server" Text='<%# Eval("DIEMKHOA") %>' />
-                                                </ItemTemplate>
-                                                <ControlStyle Font-Size="Medium"></ControlStyle>
-                                                <HeaderStyle HorizontalAlign="Center"></HeaderStyle>
-                                                <ItemStyle Width="10%" CssClass="text-center" />
-                                            </asp:TemplateField>
-                                            <asp:TemplateField HeaderText="DiemCTCT" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
-                                                <ItemTemplate>
-                                                    <asp:Label runat="server" Text='<%# Eval("DIEMCTCT") %>' Width="10%" CssClass="text-right" />
-                                                </ItemTemplate>
-                                                <ControlStyle Font-Size="Medium"></ControlStyle>
-                                                <HeaderStyle HorizontalAlign="Center"></HeaderStyle>
-                                                <ItemStyle Width="10%" CssClass="text-center" />
-                                            </asp:TemplateField>
-                                            <asp:TemplateField HeaderText="Xếp Loại" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
-                                                <ItemTemplate>
-                                                    <asp:Label runat="server" Text='<%# Eval("XEP_LOAI") %>' Width="10%" CssClass="text-right" />
-                                                </ItemTemplate>
-                                                <ControlStyle Font-Size="Medium"></ControlStyle>
-                                                <HeaderStyle HorizontalAlign="Center"></HeaderStyle>
-                                                <ItemStyle Width="10%" CssClass="text-center" />
-                                            </asp:TemplateField>
-                                            <asp:TemplateField HeaderText="Tinh trạng" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
-                                                <ItemTemplate>
-                                                    <asp:Label runat="server" Text='' Width="10%" CssClass="text-right" />
-                                                </ItemTemplate>
-                                                <ControlStyle Font-Size="Medium"></ControlStyle>
-                                                <HeaderStyle HorizontalAlign="Center"></HeaderStyle>
-                                                <ItemStyle Width="10%" CssClass="text-center" />
-                                            </asp:TemplateField>
-                                            <asp:ButtonField ButtonType="Button" CommandName="btn_duyet" Text="Duyêt">
+                        <tr>
+                            <td colspan="10">
+                                <h4 class="text-center">DANH SÁCH DUYỆT ĐIỂM RÈN LUYỆN LỚP <asp:Label ID="lbl_lop" runat="server"></asp:Label> </h4>      
+                                <asp:Label ID="lbl_id" runat="server" Visible="false"></asp:Label>                          
+                            </td>
+                        </tr>
+                        <tr>
+                            <th rowspan="2" style="width: 5%; text-align: center">STT</th>
+                            <th rowspan="2" style="width: 10%; text-align: center">Mã sinh viên</th>
+                            <th rowspan="2" style="width: 15%; text-align: center">Họ và tên</th>
+                            <th rowspan="2" style="width: 10%; text-align: center">Ngày sinh</th>
+                            <th colspan="4" style="width: 20%; text-align: center">Điểm</th>
+                            <th rowspan="2" style="width: 10%; text-align: center">Xếp loại</th>
+                            <th rowspan="2" style="width: 20%; text-align: center">Tình trạng</th>
+                        </tr>
+                        <tr>
+                            <th style="width: 5%; text-align: center">SV chấm</th>
+                            <th style="width: 5%; text-align: center">Thông qua lớp</th>
+                            <th style="width: 5%; text-align: center">Thông qua khoa</th>
+                            <th style="width: 5%; text-align: center">Thông qua PCTCT</th>
+                        </tr>
+                        <tr>
+                            <td colspan="11">
+                                <asp:GridView ID="grv_dsLop" runat="server" DataKeyNames="MA_SINH_VIEN" AutoGenerateColumns="False" ShowHeader="False" Width="100%" OnRowCommand="grv_dsLop_RowCommand">
+                                    <Columns>
+                                        <asp:TemplateField HeaderText="STT" HeaderStyle-CssClass="danger" HeaderStyle-HorizontalAlign="Center">
+                                            <ItemTemplate>
+                                                <%# Container.DataItemIndex + 1 %>
+                                            </ItemTemplate>
+                                            <ControlStyle BorderStyle="Solid" />
+                                            <HeaderStyle HorizontalAlign="Center" CssClass="danger"></HeaderStyle>
+                                            <ItemStyle Width="5%" CssClass="text-center" BorderStyle="Solid" />
+                                        </asp:TemplateField>
+                                        <asp:BoundField DataField="MA_SINH_VIEN" HeaderText="Mã sinh viên">
+                                            <ItemStyle Width="10%" CssClass="text-center"></ItemStyle>
+                                        </asp:BoundField>
+                                        <asp:BoundField DataField="HOTEN" HeaderText="Họ và Tên">
+                                            <ItemStyle Width="15%" />
+                                        </asp:BoundField>
+                                        <asp:BoundField DataField="NGAY_SINH" HeaderText="Ngày sinh">
+                                            <ItemStyle Width="10%" CssClass="text-center" />
+                                        </asp:BoundField>
+                                        <asp:TemplateField HeaderText="DiemTC" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
+                                            <ItemTemplate>
+                                                <asp:Label runat="server" Text='<%# Eval("DIEMTC") %>' />
+                                            </ItemTemplate>
+                                            <ControlStyle Font-Size="Medium"></ControlStyle>
+                                            <HeaderStyle HorizontalAlign="Center"></HeaderStyle>
+                                            <ItemStyle Width="5%" CssClass="text-center" />
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="KiemLOP" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
+                                            <ItemTemplate>
+                                                <asp:Label runat="server" Text='<%# Eval("DIEMLOP") %>' />
+                                            </ItemTemplate>
+                                            <ControlStyle Font-Size="Medium"></ControlStyle>
+                                            <HeaderStyle HorizontalAlign="Center"></HeaderStyle>
+                                            <ItemStyle Width="5%" CssClass="text-center" />
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="DiemKhoa" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
+                                            <ItemTemplate>
+                                                <asp:Label runat="server" Text='<%# Eval("DIEMKHOA") %>' />
+                                            </ItemTemplate>
+                                            <ControlStyle Font-Size="Medium"></ControlStyle>
+                                            <HeaderStyle HorizontalAlign="Center"></HeaderStyle>
+                                            <ItemStyle Width="5%" CssClass="text-center" />
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="DiemCTCT" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
+                                            <ItemTemplate>
+                                                <asp:Label runat="server" Text='<%# Eval("DIEMCTCT") %>' Width="10%" CssClass="text-right" />
+                                            </ItemTemplate>
+                                            <ControlStyle Font-Size="Medium"></ControlStyle>
+                                            <HeaderStyle HorizontalAlign="Center"></HeaderStyle>
+                                            <ItemStyle Width="5%" CssClass="text-center" />
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="Xếp Loại" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
+                                            <ItemTemplate>
+                                                <asp:Label runat="server" Text='<%# Eval("XEP_LOAI") %>' Width="10%" CssClass="text-right" />
+                                            </ItemTemplate>
+                                            <ControlStyle Font-Size="Medium"></ControlStyle>
+                                            <HeaderStyle HorizontalAlign="Center"></HeaderStyle>
+                                            <ItemStyle Width="10%" CssClass="text-center" />
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="Trạng Thái" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
+                                            <ItemTemplate>
+                                                <asp:Label runat="server" ID="lbl_trangthai" Text="" />
+                                            </ItemTemplate>
+                                            <ControlStyle Font-Size="Medium"></ControlStyle>
+                                            <HeaderStyle HorizontalAlign="Center"></HeaderStyle>
+                                            <ItemStyle Width="12%" CssClass="text-center" />
+                                        </asp:TemplateField>
+                                        <asp:ButtonField ButtonType="Button" CommandName="btn_duyet" Text="Duyêt" ItemStyle-CssClass="text-center">
                                             <ControlStyle BackColor="#66CCFF" />
-                                            </asp:ButtonField>
-                                        </Columns>
-                                    </asp:GridView>
-                                </td>
-                            </tr>
-                        </table>
+                                            <ItemStyle Width="8%" />
+                                        </asp:ButtonField>
+                                    </Columns>
+                                </asp:GridView>
+                            </td>
+                        </tr>
+                    </table>
                     <br />
                 </fieldset>           
             </div>
@@ -244,7 +258,7 @@
                                 <td><asp:Label ID="Noisinh" runat="server" Text=""></asp:Label></td>
                             </tr>
                             <tr>
-                                <td></td>
+                                <td><asp:Label ID="lblmasv" Visible="false" runat="server" Text=""></asp:Label></td>
                                 <td></td>
                             </tr>
                             <tr>
@@ -274,6 +288,9 @@
                                                 <td width="7%" class="text-center">
                                                     <asp:TextBox ID="t1" runat="server" Text="0" Width="50px" CssClass="text-center" Enabled="false" AutoPostBack="True"></asp:TextBox>
                                                 </td>
+                                                <td width="7%" class="text-center">
+                                                    <asp:TextBox ID="t1lt" runat="server" Text="0" Width="50px" CssClass="text-center" Enabled="false" AutoPostBack="True"></asp:TextBox>
+                                                </td>
                                             </tr>
                                             <tr style="text-align: left">
                                                 <td>1.1.</td>
@@ -285,6 +302,9 @@
                                                 </td>
                                                 <td class="text-center">
                                                     <asp:TextBox ID="t11" runat="server" Text="0" Width="50px" CssClass="text-center" Enabled="False"></asp:TextBox>
+                                                </td>
+                                                <td class="text-center">
+                                                    <asp:TextBox ID="t11lt" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
                                                 </td>
                                             </tr>
                                             <tr style="text-align: left">
@@ -406,6 +426,9 @@
                                                 <td class="text-center">
                                                     <asp:TextBox ID="t2" runat="server" Text="0" Width="50px" CssClass="text-center" Enabled="false"></asp:TextBox>
                                                 </td>
+                                                <td class="text-center">
+                                                    <asp:TextBox ID="t2lt" runat="server" Text="0" Width="50px" CssClass="text-center" Enabled="false"></asp:TextBox>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>2.1</td>
@@ -416,7 +439,10 @@
                                                     <h5>5</h5>
                                                 </td>
                                                 <td class="text-center">
-                                                    <asp:TextBox ID="t21" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                    <asp:TextBox ID="t21" runat="server" Text="0" Width="50px" Enabled="false" CssClass="text-center"></asp:TextBox>
+                                                </td>
+                                                <td class="text-center">
+                                                    <asp:TextBox ID="t21lt" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -428,7 +454,10 @@
                                                     <h5>5</h5>
                                                 </td>
                                                 <td class="text-center">
-                                                    <asp:TextBox ID="t22" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                    <asp:TextBox ID="t22" runat="server" Enabled="false" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                </td>
+                                                <td class="text-center">
+                                                    <asp:TextBox ID="t22lt" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -440,7 +469,10 @@
                                                     <h5>5</h5>
                                                 </td>
                                                 <td class="text-center">
-                                                    <asp:TextBox ID="t23" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                    <asp:TextBox ID="t23" runat="server" Text="0" Enabled="false" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                </td>
+                                                <td class="text-center">
+                                                    <asp:TextBox ID="t23lt" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -452,7 +484,10 @@
                                                     <h5>5</h5>
                                                 </td>
                                                 <td class="text-center">
-                                                    <asp:TextBox ID="t24" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                    <asp:TextBox ID="t24" runat="server" Enabled="false" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                </td>
+                                                <td class="text-center">
+                                                    <asp:TextBox ID="t24lt" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -464,7 +499,10 @@
                                                     <h5>5</h5>
                                                 </td>
                                                 <td class="text-center">
-                                                    <asp:TextBox ID="t25" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                    <asp:TextBox ID="t25" runat="server" Enabled="false" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                </td>
+                                                <td class="text-center">
+                                                    <asp:TextBox ID="t25lt" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -478,6 +516,9 @@
                                                 <td class="text-center">
                                                     <asp:TextBox ID="t3" runat="server" Text="0" Width="50px" CssClass="text-center" Enabled="false"></asp:TextBox>
                                                 </td>
+                                                <td class="text-center">
+                                                    <asp:TextBox ID="t3lt" runat="server" Text="0" Width="50px" CssClass="text-center" Enabled="false"></asp:TextBox>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>3.1</td>
@@ -488,7 +529,10 @@
                                                     <h5>5</h5>
                                                 </td>
                                                 <td class="text-center">
-                                                    <asp:TextBox ID="t31" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                    <asp:TextBox ID="t31" runat="server" Enabled="false" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                </td>
+                                                <td class="text-center">
+                                                    <asp:TextBox ID="t31lt" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -500,7 +544,10 @@
                                                     <h5>5</h5>
                                                 </td>
                                                 <td class="text-center">
-                                                    <asp:TextBox ID="t32" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                    <asp:TextBox ID="t32" runat="server" Text="0" Enabled="false" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                </td>
+                                                <td class="text-center">
+                                                    <asp:TextBox ID="t32lt" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -512,7 +559,10 @@
                                                     <h5>5</h5>
                                                 </td>
                                                 <td class="text-center">
-                                                    <asp:TextBox ID="t33" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                    <asp:TextBox ID="t33" runat="server" Enabled="false" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                </td>
+                                                <td class="text-center">
+                                                    <asp:TextBox ID="t33lt" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -524,7 +574,10 @@
                                                     <h5>5</h5>
                                                 </td>
                                                 <td class="text-center">
-                                                    <asp:TextBox ID="t34" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                    <asp:TextBox ID="t34" runat="server" Enabled="false" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                </td>
+                                                <td class="text-center">
+                                                    <asp:TextBox ID="t34lt" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -536,7 +589,10 @@
                                                     <h5>5</h5>
                                                 </td>
                                                 <td class="text-center">
-                                                    <asp:TextBox ID="t35" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                    <asp:TextBox ID="t35" runat="server" Enabled="false" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                </td>
+                                                <td class="text-center">
+                                                    <asp:TextBox ID="t35lt" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -550,6 +606,9 @@
                                                 <td class="text-center">
                                                     <asp:TextBox ID="t4" runat="server" Text="0" Width="50px" CssClass="text-center" Enabled="False"></asp:TextBox>
                                                 </td>
+                                                <td class="text-center">
+                                                    <asp:TextBox ID="t4lt" runat="server" Text="0" Width="50px" CssClass="text-center" Enabled="False"></asp:TextBox>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>4.1</td>
@@ -560,7 +619,10 @@
                                                     <h5>5</h5>
                                                 </td>
                                                 <td class="text-center">
-                                                    <asp:TextBox ID="t41" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                    <asp:TextBox ID="t41" runat="server" Enabled="false" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                </td>
+                                                <td class="text-center">
+                                                    <asp:TextBox ID="t41lt" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -572,7 +634,10 @@
                                                     <h5>5</h5>
                                                 </td>
                                                 <td class="text-center">
-                                                    <asp:TextBox ID="t42" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                    <asp:TextBox ID="t42" runat="server" Enabled="false" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                </td>
+                                                <td class="text-center">
+                                                    <asp:TextBox ID="t42lt" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -584,7 +649,10 @@
                                                     <h5>5</h5>
                                                 </td>
                                                 <td class="text-center">
-                                                    <asp:TextBox ID="t43" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                    <asp:TextBox ID="t43" runat="server" Enabled="false" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
+                                                </td>
+                                                <td class="text-center">
+                                                    <asp:TextBox ID="t43lt" runat="server" Text="0" Width="50px" CssClass="text-center"></asp:TextBox>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -596,7 +664,10 @@
                                                     <h5>5</h5>
                                                 </td>
                                                 <td class="text-center">
-                                                    <asp:TextBox ID="t44" runat="server" Text="0" Width="50px" CssClass="text-center" MaxLength="5"></asp:TextBox>
+                                                    <asp:TextBox ID="t44" runat="server" Enabled="false" Text="0" Width="50px" CssClass="text-center" MaxLength="5"></asp:TextBox>
+                                                </td>
+                                                <td class="text-center">
+                                                    <asp:TextBox ID="t44lt" runat="server" Text="0" Width="50px" CssClass="text-center" MaxLength="5"></asp:TextBox>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -609,6 +680,9 @@
                                                 </td>
                                                 <td class="text-center">
                                                     <asp:TextBox ID="txt_tong" runat="server" Text="0" Width="50px" CssClass="text-center" Enabled="false"></asp:TextBox>
+                                                </td>
+                                                <td class="text-center">
+                                                    <asp:TextBox ID="txt_tonglt" runat="server" Text="0" Width="50px" CssClass="text-center" Enabled="false"></asp:TextBox>
                                                 </td>
                                             </tr>
                                             <tr>

@@ -54,16 +54,51 @@ begin
 		where Ma_SInh_Vien=@Ma_SInh_Vien and Ky_Hoc = @Ky_Hoc
 	end
 end
-
-create proc rl_get_PhieuRenLuyen
+---
+create proc rl_UpdateLT_RL_PhieuDiem
+ @Ma_SInh_Vien varchar(12),
+ @Ky_Hoc varchar(3),
+ @T1 varchar(5),
+ @T11 varchar(5),
+ @T2 varchar(5),
+ @T21 varchar(5),
+ @T22 varchar(5),
+ @T23 varchar(5),
+ @T24 varchar(5),
+ @T25 varchar(5),
+ @T3 varchar(5),
+ @T31 varchar(5),
+ @T32 varchar(5),
+ @T33 varchar(5),
+ @T34 varchar(5),
+ @T35 varchar(5),
+ @T4 varchar(5),
+ @T41 varchar(5),
+ @T42 varchar(5),
+ @T43 varchar(5),
+ @T44 varchar(5),
+ @T5TTKy varchar(5)
+as
+begin
+	begin
+		update RL_PhieuDiem set LTT1=@T1, LTT11=@T11, LTT2=@T2, LTT21=@T21, LTT22=@T22, 
+		LTT23=@T23, LTT24=@T24, LTT25=@T25, LTT3=@T3, LTT31=@T31, LTT32=@T32, LTT33=@T33, LTT34=@T34, LTT35=@T35, 
+		LTT4=@T4, LTT41=@T41, LTT42=@T42, LTT43=@T43, LTT44=@T44, LTT5TTKy=@T5TTKy
+		where Ma_SInh_Vien=@Ma_SInh_Vien and Ky_Hoc = @Ky_Hoc
+	end
+end
+---
+alter proc rl_get_PhieuRenLuyen
 @masv varchar(12),
 @Ky_Hoc varchar(3)
 as
 begin
-	select * from RL_PhieuDiem 
+	declare @tthai int
+	set @tthai = (select TrangThai from RL_DIEM_TH_RENLUYEN where Ma_SInh_Vien=@masv and Ky_Hoc=@Ky_Hoc)
+	select *, @tthai as TrangThai from RL_PhieuDiem 
 	where Ma_SInh_Vien=@masv and Ky_Hoc=@Ky_Hoc
 end
-
+--exec rl_get_PhieuRenLuyen '221183404104','241'
 create proc rl_checkVang
 @masv varchar(12),
 @kyhoc varchar(3)
@@ -81,7 +116,7 @@ begin
 	select * from RL_DIEM_TH_RENLUYEN where MA_SINH_VIEN = @masv
 end
 
-create proc rl_insert_DIEM_TH_RENLUYEN
+ALTER proc rl_insert_DIEM_TH_RENLUYEN
 @MA_SINH_VIEN varchar(12),
 @HOTEN nvarchar(100),
 @NGAY_SINH nvarchar(10),
@@ -95,12 +130,23 @@ begin
 	set @dem = (select count(MA_SINH_VIEN) from RL_DIEM_TH_RENLUYEN where MA_SINH_VIEN=@MA_SINH_VIEN and KY_HOC=@KY_HOC)
 	if(@dem=0)
 	begin
-		INSERT INTO RL_DIEM_TH_RENLUYEN(MA_SINH_VIEN, HOTEN, NGAY_SINH, LOP, KY_HOC, NOIDUNGDG, DIEMTC, NGAYTAO)
+		INSERT INTO RL_DIEM_TH_RENLUYEN(MA_SINH_VIEN, HO_LOT, NGAY_SINH, LOP, KY_HOC, NOIDUNGDG, DIEMTC, NGAYTAO)
 		VALUES(@MA_SINH_VIEN, @HOTEN, @NGAY_SINH, @LOP, @KY_HOC, @NOIDUNGDG, @DIEMTC, GETDATE())
 	end
 	if(@dem>0)
 	begin
-		update RL_DIEM_TH_RENLUYEN set DIEMTC = @DIEMTC where MA_SINH_VIEN=@MA_SINH_VIEN and KY_HOC=@KY_HOC
+		update RL_DIEM_TH_RENLUYEN set DIEMTC = @DIEMTC, TrangThai=1 where MA_SINH_VIEN=@MA_SINH_VIEN and KY_HOC=@KY_HOC
+	end
+end
+----
+alter proc rl_UpdateLT_DIEM_TH_RENLUYEN
+@MA_SINH_VIEN varchar(12),
+@KY_HOC varchar(3),
+@DIEMLOP nvarchar(4)
+as
+begin
+	begin
+		update RL_DIEM_TH_RENLUYEN set DIEMLOP = @DIEMLOP, TrangThai=2 where MA_SINH_VIEN=@MA_SINH_VIEN and KY_HOC=@KY_HOC
 	end
 end
 ----
@@ -134,7 +180,89 @@ begin
 	declare @lop varchar(20), @kyhoc varchar(3)
 	set @lop = (select Lop from RL_DSLopCham where id=@id)
 	set @kyhoc = (select Ky_hoc from RL_DSLopCham where id=@id)
-	select HO_LOT+' '+TEN as HOTEN, * from RL_DIEM_TH_RENLUYEN where LOP = @lop and KY_HOC= @kyhoc order by TEN, HO_LOT
+	select HO_LOT+' '+TEN as HOTEN, MA_SINH_VIEN, HO_LOT, TEN, NGAY_SINH, LOP,KY_HOC, NOIDUNGDG,
+	DIEMTC, DIEMLOP, 	DIEMKHOA,	DIEMCTCT, NGAYTAO, XEP_LOAI, TrangThai
+	from RL_DIEM_TH_RENLUYEN where LOP = @lop and KY_HOC= @kyhoc order by TEN, HO_LOT
 end
 
 --exec rl_GetLopCham 54
+
+---Khoa chấm
+alter proc check_DiemHT
+@masv varchar(12),
+@ky varchar(12)
+as
+begin
+	declare @duoi7 int, @diemF int
+	-- đểm dưới 7
+	set @duoi7 = (select COUNT(DIEMTB) from CQ_INLOPHOCPHAN d inner join D_HO_SO_SINH_VIEN h on d.MA_SINH_VIEN = h.MA_SINH_VIEN
+	where MA_KY_HOC = @ky and (CONVERT(float, DIEMTB, 2) between 4 and 6.9)
+	and TamNgung = 0 and ThoiHoc = 0 and h.MA_SINH_VIEN=@masv)
+	-- số điểm F
+	set @diemF = (select COUNT(DIEMTB) from CQ_INLOPHOCPHAN d inner join D_HO_SO_SINH_VIEN h on d.MA_SINH_VIEN = h.MA_SINH_VIEN
+	where MA_KY_HOC = @ky and CONVERT(float, DIEMTB, 2)< 4 
+	and TamNgung = 0 and ThoiHoc = 0 and h.MA_SINH_VIEN=@masv)
+	---trung bình điểm 4 
+	declare @diemtb varchar(5), @t12 varchar(5), @t121 varchar(5), @t122 varchar(5), @t123 varchar(5), @t124 varchar(5), @t125 varchar(5), @t13 varchar(5), 
+	@t131 varchar(5), @t132 varchar(5)
+	set @diemtb = (SELECT [dbo].[DTB4](@ky,MA_SINH_VIEN) FROM   D_HO_SO_SINH_VIEN
+	WHERE  (ThoiHoc = 0) AND (TamNgung = 0) and MA_SINH_VIEN=@masv)
+	--- lấy điểm cá nhân
+	declare @diemtc varchar(5)
+	set @diemtc = (select T5TTKy from RL_PhieuDiem where Ma_SInh_Vien=@masv and Ky_Hoc=@ky)
+	----
+	if(CONVERT(float, @diemtb)>=3.6)
+	begin
+		set @t121 = 15
+		set @t12 = 15
+	end
+	else if(CONVERT(float, @diemtb)>=3.2)
+	begin
+		set @t122 = 13
+		set @t12 = 13
+	end
+	else if(CONVERT(float, @diemtb)>=2.5)
+	begin
+		set @t123 = 11
+		set @t12 = 11
+	end
+	else if(CONVERT(float, @diemtb)>=2.0)
+	begin
+		set @t124 = 9
+		set @t12 = 9
+	end
+	else if(CONVERT(float, @diemtb)<=2)
+	begin
+		set @t124 = 7
+		set @t12 = 7
+	end
+	if(@duoi7=0)
+	begin
+		set @t13 = 5
+		set @t131 = 5
+	end
+	else if(@duoi7>0)
+	begin
+		set @t13 = 0
+		set @t131 = 0
+	end
+	if(@diemF=0)
+	begin
+		set @t13 = 3
+		set @t132 = 3
+	end
+	else if(@diemF>0)
+	begin
+		set @t13 = 0
+		set @t132 = 0
+	end
+	declare @tong varchar(5)
+	set @tong = CONVERT(float, @t12)+CONVERT(float,@t13)+ CONVERT(float,@diemtc)
+	update RL_PhieuDiem set T12=@t12, T121=@t121, T122=@t122, T123=@t123, T124=@t124, T125=@t125, T13=@t13, T131=@t131, T132=@t132, TongKhoa=@tong
+	where Ma_SInh_Vien=@masv and Ky_Hoc=@ky
+	update RL_DIEM_TH_RENLUYEN set DIEMKHOA = @tong where MA_SINH_VIEN=@masv and Ky_Hoc=@ky
+	print @tong
+	print @t12
+	print @t13
+end
+--exec check_DiemHT '221183404104','241'

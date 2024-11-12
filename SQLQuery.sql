@@ -208,8 +208,8 @@ begin
 	set @diemtb = (SELECT [dbo].[DTB4](@ky,MA_SINH_VIEN) FROM   D_HO_SO_SINH_VIEN
 	WHERE  (ThoiHoc = 0) AND (TamNgung = 0) and MA_SINH_VIEN=@masv)
 	--- lấy điểm cá nhân
-	declare @diemtc varchar(5)
-	set @diemtc = (select T5TTKy from RL_PhieuDiem where Ma_SInh_Vien=@masv and Ky_Hoc=@ky)
+	declare @diemlop varchar(5)
+	set @diemlop = (select LTT5TTKy from RL_PhieuDiem where Ma_SInh_Vien=@masv and Ky_Hoc=@ky)
 	----
 	if(CONVERT(float, @diemtb)>=3.6)
 	begin
@@ -257,8 +257,9 @@ begin
 		set @t132 = 0
 	end
 	declare @tong varchar(5)
-	set @tong = CONVERT(float, @t12)+CONVERT(float,@t13)+ CONVERT(float,@diemtc)
-	update RL_PhieuDiem set T12=@t12, T121=@t121, T122=@t122, T123=@t123, T124=@t124, T125=@t125, T13=@t13, T131=@t131, T132=@t132, TongKhoa=@tong
+	set @tong = CONVERT(float, @t12)+CONVERT(float,@t13)+ CONVERT(float,@diemlop)
+	update RL_PhieuDiem set T12=@t12, T121=@t121, T122=@t122, T123=@t123, T124=@t124, T125=@t125, 
+	T13=@t13, T131=@t131, T132=@t132, TongKhoa=@tong, TBD4=@diemtb, DIEMD7=@duoi7, DIEMF=@diemF
 	where Ma_SInh_Vien=@masv and Ky_Hoc=@ky
 	update RL_DIEM_TH_RENLUYEN set DIEMKHOA = @tong where MA_SINH_VIEN=@masv and Ky_Hoc=@ky
 	print @tong
@@ -266,3 +267,56 @@ begin
 	print @t13
 end
 --exec check_DiemHT '221183404104','241'
+---Khoa chấm điểm theo lớp
+alter proc rl_KhoaCham
+@khoa varchar(4),
+@Ky varchar(3)
+as
+begin
+	DECLARE @MA_SINH_VIEN nvarchar(12)
+	DECLARE MSV_Cursorr CURSOR FOR select rl.Ma_Sinh_Vien From RL_PhieuDiem rl
+	inner join D_HO_SO_SINH_VIEN hs on rl.Ma_SInh_Vien = hs.MA_SINH_VIEN
+	where Ky_Hoc=@ky and RIGHT(hs.LOP,2)=@khoa
+	----
+	OPEN MSV_Cursorr 
+	FETCH NEXT FROM MSV_Cursorr INTO @MA_SINH_VIEN
+	WHILE @@FETCH_STATUS=0
+	BEGIN
+	execute [dbo].[check_DiemHT]@MA_SINH_VIEN, @Ky
+	FETCH NEXT FROM MSV_Cursorr INTO @MA_SINH_VIEN
+	END
+	CLOSE MSV_Cursorr
+	DEALLOCATE MSV_Cursorr
+end
+--exec rl_KhoaCham '22', '241'
+-- lấy khóa học
+alter proc rl_getKhoa
+as
+begin
+	select top(5) * from S_KHOA_HOC order by KHOA_HOC desc
+end
+----Lấy danh sách lớp sau khi chấm
+create proc rl_getDSKhoaCham
+@ky varchar(3),
+@khoa varchar(2)
+as
+begin
+	select pd.MA_SINH_VIEN, HO_LOT+' '+TEN as HOTEN, LOP, NGAY_SINH, T5TTKy, LTT5TTKy, 
+	TongKhoa, T12, T13, TBD4, DIEMD7, DIEMF
+	from RL_PhieuDiem pd inner join D_HO_SO_SINH_VIEN hs on pd.Ma_SInh_Vien=hs.MA_SINH_VIEN
+	where Ky_Hoc=@ky and RIGHT(lop,2)= @khoa
+	order by lop, ten, HO_LOT
+end
+--exec rl_getDSKhoaCham '241','22'
+----
+CREATE TABLE [dbo].[RL_DIEM_TH_KY_RENLUYEN](
+	[MA_SINH_VIEN] [nvarchar](12) NOT NULL,
+	[KY1] [nvarchar](4) NULL,
+	[KY2] [nvarchar](4) NULL,
+	[KY3] [nvarchar](4) NULL,
+	[KY4] [nvarchar](4) NULL,
+	[KY5] [nvarchar](4) NULL,
+	[KY6] [nvarchar](4) NULL,
+	[XEP_LOAI] [int] NULL,
+	[TrangThai] [int] NULL
+)

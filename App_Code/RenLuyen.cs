@@ -29,6 +29,20 @@ public class RenLuyen
         conn.Close();
         return dtb;
     }
+    //Lấy danh sách khóa nhập học
+    public DataTable rl_getKhoa()
+    {
+        cmd = new SqlCommand("rl_getKhoa", conn);
+        cmd.CommandType = CommandType.StoredProcedure;
+        conn.Open();
+        cmd.ExecuteNonQuery();
+        da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataTable dtb = new DataTable();
+        da.Fill(dtb);
+        conn.Close();
+        return dtb;
+    }
     //Lấy thông tin sinh viên
     public DataTable rl_sinhvien(string user)
     {
@@ -279,5 +293,37 @@ public class RenLuyen
         kq = cmd.ExecuteNonQuery();
         conn.Close();
         return kq;
+    }
+    //Hàm khoa thưc hiện chấm điểm mục 1.2 và 1.3
+    public int rl_KhoaCham(string khoa, string ky)
+    {
+        int kq = 0;
+        cmd = new SqlCommand("rl_KhoaCham", conn);
+        cmd.CommandType = CommandType.StoredProcedure;
+        cmd.Parameters.Add("@khoa", SqlDbType.VarChar, 4);
+        cmd.Parameters.Add("@Ky", SqlDbType.VarChar, 3);
+        cmd.Parameters["@khoa"].Value = khoa;
+        cmd.Parameters["@Ky"].Value = ky;
+        conn.Open();
+        kq = cmd.ExecuteNonQuery();
+        conn.Close();
+        return kq;
+    }
+    //Lấy danh sách khoa chấm
+    public DataTable rl_getDSKhoaCham(string ky, string khoa)
+    {
+        cmd = new SqlCommand("rl_getDSKhoaCham", conn);
+        cmd.CommandType = CommandType.StoredProcedure;
+        cmd.Parameters.Add("@ky", SqlDbType.VarChar, 3);
+        cmd.Parameters.Add("@khoa", SqlDbType.VarChar, 2);
+        cmd.Parameters["@ky"].Value = ky;
+        cmd.Parameters["@khoa"].Value = khoa;
+        conn.Open();
+        da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataTable dtb = new DataTable();
+        da.Fill(dtb);
+        conn.Close();
+        return dtb;
     }
 }

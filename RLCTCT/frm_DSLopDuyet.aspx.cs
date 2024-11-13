@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Reporting.WebForms;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -10,6 +11,7 @@ public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
 {
     RenLuyen rl = new RenLuyen();
     string username = "";
+    int id;
     protected void Page_Load(object sender, EventArgs e)
     {
         username = "221183404140";
@@ -21,6 +23,7 @@ public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
     {
         DataTable dtb = new DataTable();
         dtb = rl.rl_dsLopDuyet(username);
+        id = int.Parse(dtb.Rows[0]["id"].ToString());
         grv_dsLopDuyet.DataSource = dtb;
         grv_dsLopDuyet.DataBind();        
     }
@@ -117,11 +120,6 @@ public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
         }
         return kq;
     }
-    protected void btn_cham_Click(object sender, EventArgs e)
-    {
-
-    }
-
     protected void btnNopKL_Click(object sender, EventArgs e)
     {
         //username = "221183404104";
@@ -130,14 +128,6 @@ public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
         string noidung_x = drl_Ky.SelectedItem.Text.ToString().Trim();
         string ky = drl_Ky.SelectedValue.ToString().Trim();
         string masv = lblmasv.Text.ToString().Trim();
-        //DataTable dt = new DataTable();
-        //dt = rl.rl_sinhvien(username);
-        //string masv = dt.Rows[0]["MA_SINH_VIEN"].ToString();
-        //string hoten = dt.Rows[0]["hoten"].ToString();
-        //string lop = dt.Rows[0]["LOP"].ToString();
-        //string ngaysinh = dt.Rows[0]["NGAY_SINH"].ToString();
-        //DataTable dt1 = rl.rl_checkVang(username, ky);
-        //int sobvang = dt1.Rows.Count;
         int t_1_1 = 0, t_2_2 = 0, t_3_3 = 0, t_4_4 = 0, tong = 0;
         string t_1 = t1lt.Text.ToString().Trim();
         string t_2 = t2lt.Text.ToString().Trim();
@@ -203,7 +193,7 @@ public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
     {
         DataTable dt = new DataTable();
         fld_dslop.Visible = true;
-        FieldTools.Visible = false;
+        //FieldTools.Visible = false;
         dt = rl.rl_GetLopCham(id);
         if (dt.Rows.Count > 0)
         {
@@ -237,40 +227,10 @@ public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
         if (e.CommandName == "Duyet")
         {
             int dong = Convert.ToInt32(e.CommandArgument.ToString());
-            int id = int.Parse(grv_dsLopDuyet.Rows[dong].Cells[1].Text.ToString());
+            id = int.Parse(grv_dsLopDuyet.Rows[dong].Cells[1].Text.ToString());
             lbl_id.Text = id.ToString();
             laydslopTongHop(id);
-            //lbl_cham.Text = "Bạn vừa click duyệt " + id;
-            //DataTable dt = new DataTable();
-            //fld_dslop.Visible = true;
-            //FieldTools.Visible = false;
-            //dt = rl.rl_GetLopCham(id);
-            //if (dt.Rows.Count > 0)
-            //{
-            //    lbl_lop.Text = dt.Rows[0]["LOP"].ToString().Trim();                
-            //    grv_dsLop.DataSource = dt;
-            //    grv_dsLop.DataBind();
-            //    for (int i = 0; i < dt.Rows.Count; i++)
-            //    {
-            //        int diem = Convert.ToInt32(dt.Rows[i]["TrangThai"].ToString().Trim());
-            //        if (diem == 0)
-            //        {
-            //            (grv_dsLop.Rows[i].FindControl("lbl_trangthai") as Label).Text = "Chưa chấm";
-            //        }
-            //        else if (diem == 1)
-            //        {
-            //            (grv_dsLop.Rows[i].FindControl("lbl_trangthai") as Label).Text = "Chờ duyệt";
-            //        }
-            //        else if (diem == 2)
-            //        {
-            //            (grv_dsLop.Rows[i].FindControl("lbl_trangthai") as Label).Text = "Đã duyệt";
-            //        }
-            //        else if (diem == 3)
-            //        {
-            //            (grv_dsLop.Rows[i].FindControl("lbl_trangthai") as Label).Text = "Đã khóa";
-            //        }
-            //    }                
-            //}            
+            flds_xembangTonghop.Visible = false;
         }
     }
 
@@ -299,5 +259,34 @@ public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
                 return;
             }                
         }
+    }
+
+    protected void btn_xemTongHop_Click(object sender, EventArgs e)
+    {
+        flds_xembangTonghop.Visible = true;
+        DataTable dtb = new DataTable("dsTongHopLop");
+        dtb = rl.rl_GetLopCham(id);
+        if (dtb.Rows.Count > 0)
+        {
+            lbl_mess.Visible = false;
+            rpv_dsTongHopLop.Visible = true;
+            rpv_dsTongHopLop.ProcessingMode = ProcessingMode.Local;
+            rpv_dsTongHopLop.LocalReport.ReportPath = Server.MapPath("rp_dsTongHopLop.rdlc");
+            rpv_dsTongHopLop.LocalReport.DataSources.Clear();
+            rpv_dsTongHopLop.LocalReport.DataSources.Add(new ReportDataSource("DSLopTH", dtb));
+            //ReportParameter[] rpPara = new ReportParameter[] {
+            //    new ReportParameter("Thang",thang.ToString()),
+            //    new ReportParameter("Nam",nam.ToString())
+            //};
+            //rpv_dsTongHopLop.LocalReport.SetParameters(rpPara);
+            rpv_dsTongHopLop.LocalReport.Refresh();
+            fld_dslop.Visible = false;
+        }
+        else
+        {
+            lbl_mess.Visible = true;
+            lbl_mess.Text = "Lớp này chưa được duyệt!";
+        }
+
     }
 }

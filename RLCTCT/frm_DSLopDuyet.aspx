@@ -1,5 +1,7 @@
 ﻿<%@ Page Title="" EnableEventValidation="false" Language="C#" MasterPageFile="~/RLCTCT/renluyen.master" AutoEventWireup="true" CodeFile="frm_DSLopDuyet.aspx.cs" Inherits="RLCTCT_frm_DSLopDuyet" %>
 
+<%@ Register assembly="Microsoft.ReportViewer.WebForms, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" namespace="Microsoft.Reporting.WebForms" tagprefix="rsweb" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <style type="text/css">
         .pdgia {
@@ -14,12 +16,28 @@
             <br />
             <br />
             <div class="col-12">
-                <fieldset id="FieldTools" runat="server" visible="true">
+                <div class="text-center">
                     <br />
-                    <br />
-                    <h4 class="text-left">Thực hiện kế hoạch chấm điểm rèn luyện</h4>
-                    <asp:Button runat="server" ID="btn_cham" OnClick="btn_cham_Click" Text="Click vào để chấm điểm rèn luyện" Visible="true" />
-                    <asp:Label ID="lbl_thongbaocham" runat="server" Text="Theo kế hoạch chấm điểm rèn luyện từ ngày 12/12/2024 đến ngày 31/12/2024"></asp:Label>
+                    <table align="center" style="width: 100%">
+                        <tr>
+                            <td class="text-center">
+                                <h4 class="text-center"><strong>ĐIỂM RÈN LUYỆN THÔNG QUA LỚP</strong></h4>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">
+                                <asp:Button ID="btn_xemTongHop" runat="server" CssClass="btn btn-primary" Text="Xem báo cáo tổng hợp" OnClick="btn_xemTongHop_Click" />  
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:Label ID="lbl_thongbaocham" runat="server" Text="Thực hiện kế hoạch chấm điểm rèn luyện từ ngày 12/12/2024 đến ngày 31/12/2024"></asp:Label>
+                            </td>
+                        </tr>
+                    </table>
+                    <br />                   
+                </div>
+                <fieldset id="FieldTools" runat="server" visible="true">                    
                     <asp:Label ID="lbl_cham" runat="server"></asp:Label>
                     <fieldset id="fld_diem_dg" runat="server" visible="true" class="text-center">
                         <table border="1px" align="center" style="width: 100%">
@@ -98,8 +116,7 @@
                                                 <ItemTemplate>
                                                     <asp:Label runat="server" Text='<%# Eval("TrangThai") %>' Visible="false" Width="10%" CssClass="text-right" />
                                                 </ItemTemplate>
-                                            </asp:TemplateField>
-                                            
+                                            </asp:TemplateField>                                            
                                             <asp:ButtonField ButtonType="Button" CommandName="Duyet" Text="Xem duyệt">
                                             <ControlStyle BackColor="Yellow" />
                                             </asp:ButtonField>
@@ -215,15 +232,23 @@
                         </tr>
                     </table>
                     <br />
-                </fieldset>           
+                </fieldset>
+                <fieldset id="flds_xembangTonghop" runat="server" visible="false">
+                    <h4 class="text-center">XEM VÀ TẢI BẢNG TỔNG HỢP CHẤM ĐIỂM RÈN LUYỆN</h4>
+                                <asp:ScriptManager ID="ScriptManager1" runat="server">
+                    </asp:ScriptManager>
+                                <rsweb:ReportViewer ID="rpv_dsTongHopLop" runat="server" Height="400px" Width="100%" Font-Names="Verdana" Font-Size="8pt" WaitMessageFont-Names="Verdana" WaitMessageFont-Size="14pt">
+                                    <LocalReport ReportPath="RLCTCT\rp_dsTongHopLop.rdlc">
+                                    </LocalReport>
+                                </rsweb:ReportViewer>                                
+                </fieldset>         
             </div>
         </div>
         <div class="row text-center">
         <fieldset id="fldset_cham_rl" runat="server" visible="false">
             <div class="row d-flex align-items-center justify-content-center" style="background-color: #b1c7c5;">
                 <div class="col-12">
-                    <h2 class="pdgia"><strong>PHIẾU ĐÁNH GIÁ KẾT QUẢ RÈN LUYỆN</strong></h2>
-                    <h4 class="text-center"><i>(Mỗi kỳ sinh viên chỉ đánh giá kết quả rèn luyện một lần vào cuối ký theo kế hoạch của phòng CTCT)</i></h4>
+                    <h2 class="pdgia"><strong>PHIẾU ĐÁNH GIÁ KẾT QUẢ RÈN LUYỆNsinh viên chỉ đánh giá kết quả rèn luyện một lần vào cuối ký theo kế hoạch của phòng CTCT)</i></h4>
                     <div class="form-horizontal ">
                         <table class="col-md-12 form-group" align="center" style="width: auto">
                             <tr>
@@ -717,9 +742,9 @@
                         </table>
                     </div>
                     <br />
-                    <br />
                 </div>
             </div>
+            </strong>
         </fieldset>
         </div>
     </div>

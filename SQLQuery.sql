@@ -173,16 +173,20 @@ begin
 end
 
 --exec rl_KhoiTaoCham '241',N'Chấm điểm rèn luyện kỳ 1 năm học 2024-2025','22'
-alter proc rl_GetLopCham
+ALTER proc [dbo].[rl_GetLopCham]
 @id int
 as
 begin
 	declare @lop varchar(20), @kyhoc varchar(3)
 	set @lop = (select Lop from RL_DSLopCham where id=@id)
 	set @kyhoc = (select Ky_hoc from RL_DSLopCham where id=@id)
-	select HO_LOT+' '+TEN as HOTEN, MA_SINH_VIEN, HO_LOT, TEN, NGAY_SINH, LOP,KY_HOC, NOIDUNGDG,
+	select HO_LOT+' '+TEN as HOTEN, MA_SINH_VIEN, HO_LOT, TEN, NGAY_SINH, rl.LOP,KY_HOC, (case RIGHT(KY_HOC,1) when 1 then 'I' else 'II' end) as HK, 
+	NOIDUNGDG, TEN_KY_HOC, TenKhoa,
 	DIEMTC, DIEMLOP, 	DIEMKHOA,	DIEMCTCT, NGAYTAO, XEP_LOAI, TrangThai
-	from RL_DIEM_TH_RENLUYEN where LOP = @lop and KY_HOC= @kyhoc order by TEN, HO_LOT
+	from RL_DIEM_TH_RENLUYEN RL inner join S_KY_HOC k on RL.KY_HOC=k.MA_KY_HOC
+	inner join S_DANH_MUC_LOP l on RL.LOP=l.Lop
+	inner join S_DANH_MUC_KHOA khoa on l.Khoa=khoa.MaKhoa
+	where rl.LOP = @lop and KY_HOC= @kyhoc order by TEN, HO_LOT
 end
 
 --exec rl_GetLopCham 54

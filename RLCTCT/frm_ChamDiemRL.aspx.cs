@@ -9,13 +9,22 @@ using System.Web.UI.WebControls;
 public partial class RLCTCT_frm_ChamDiemRL : System.Web.UI.Page
 {
     RenLuyen rl = new RenLuyen();
-    string username = "221183404102";
+    string username = "";
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
+        if (Session["USERNAME"] != null)
         {
-            getky();
-            rl_getDiemTH();
+            username = Session["USERNAME"].ToString().Trim();
+            if (!IsPostBack)
+            {
+
+                getky();
+                rl_getDiemTH();
+            }
+        }
+        else
+        {
+            Response.Redirect("~/logout.aspx");
         }
     }
     //lấy kỳ chấm điểm
@@ -32,7 +41,7 @@ public partial class RLCTCT_frm_ChamDiemRL : System.Web.UI.Page
     //Lấy điểm tổng hợp
     public void rl_getDiemTH()
     {
-        username = "221183404102";
+        //username = "221183404102";
         DataTable dtb = new DataTable();
         dtb = rl.rl_get_DIEM_TH_RENLUYEN(username);
         if (dtb.Rows.Count > 0)
@@ -48,7 +57,7 @@ public partial class RLCTCT_frm_ChamDiemRL : System.Web.UI.Page
     }
     protected void btnNopKL_Click(object sender, EventArgs e)
     {
-        username = "221183404102";
+        //username = "221183404102";
         FieldTools.Visible = true;
         fldset_cham_rl.Visible = false;        
         string noidung_x = drl_Ky.SelectedItem.Text.ToString().Trim();
@@ -137,7 +146,7 @@ public partial class RLCTCT_frm_ChamDiemRL : System.Web.UI.Page
     }
     protected void btn_cham_Click(object sender, EventArgs e)
     {
-        username = "221183404102";
+        //username = "221183404102";
         string ky = drl_Ky.SelectedValue.ToString().Trim();
         FieldTools.Visible = false;
         fldset_cham_rl.Visible = true;
@@ -162,7 +171,7 @@ public partial class RLCTCT_frm_ChamDiemRL : System.Web.UI.Page
     public void get_Phieu()
     {
         string ky = drl_Ky.SelectedValue.ToString().Trim();
-        username = "221183404102";
+        //username = "221183404102";
         DataTable dtb = new DataTable();
         dtb = rl.rl_get_PhieuRenLuyen(username, ky);
         if (dtb.Rows.Count > 0)

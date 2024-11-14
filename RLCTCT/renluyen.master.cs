@@ -9,6 +9,17 @@ public partial class RLCTCT_renluyen : System.Web.UI.MasterPage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        if (!Page.IsPostBack)
+        {
+            if (Session["USERNAME"] != null)
+            {
+                lblFullName.Text = Session["FullName"].ToString().Trim();
+                hypExit.Visible = true;
+            }
+            else
+            {
+                Response.Redirect("~/logout.aspx");
+            }
+        }
     }
 }

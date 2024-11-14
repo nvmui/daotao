@@ -14,9 +14,20 @@ public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
     int id;
     protected void Page_Load(object sender, EventArgs e)
     {
-        username = "221183404140";
-        getky();
-        get_dsDuyetLop();
+        if (Session["USERNAME"] != null)
+        {
+            username = Session["USERNAME"].ToString().Trim();
+            if (!IsPostBack)
+            {
+                //username = "221183404140";
+                getky();
+                get_dsDuyetLop();
+            }
+        }
+        else
+        {
+            Response.Redirect("~/logout.aspx");
+        }
     }
     //Hàm lấy lớp duyệt
     public void get_dsDuyetLop()

@@ -1,0 +1,35 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/RLCTCT/renluyen.master" AutoEventWireup="true" CodeFile="ctct.master.cs" Inherits="RLCTCT_ctct" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-12 col-md-12 col-sm-12">
+                <br />
+                <h4><strong>THỰC HIỆN CHẤM ĐIỂM RÈN LUYỆN</strong></h4>
+                <div class="text-right">
+                    <a href="frm_CTCTCham.aspx" class="btn btn-primary">Tạo kế hoạch</a>
+                    <%--<asp:Button ID="btn_khoitaocham" runat="server" Text="Tạo kế hoạch" CssClass="btn btn-primary" />--%>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="frm_rpXemDSLop_KH.aspx" class="btn btn-primary">Xem kế hoạch và ds sinh viên</a>
+                    <%--<asp:Button ID="btn_khoitao_svcham" runat="server" Text="Xem kế hoạch và ds sinh viên" CssClass="btn btn-primary" />--%>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#" class="btn btn-primary">Tổng hợp điểm</a>
+                    <%--<asp:Button ID="btn_tonghop" runat="server" Text="Tổng hợp điểm" CssClass="btn btn-primary"  />--%>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#" class="btn btn-primary">Xem và xuất báo cáo</a>
+                    <%--<asp:Button ID="btn_xuatbaocao" runat="server" Text="Xem và xuất báo cáo" CssClass="btn btn-primary"/>--%>
+                </div>
+                <br />
+            </div>
+        </div>
+        <div class="container row">
+            <div class="col-12 col-md-12 col-sm-12">
+               <asp:ContentPlaceHolder ID="ContentPlaceHolder2" runat="server">
+                </asp:ContentPlaceHolder>
+            </div>
+        </div>
+    </div>
+</asp:Content>
+

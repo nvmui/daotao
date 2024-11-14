@@ -11,7 +11,7 @@ as
 begin
 	select * from S_KY_HOC where Ky_RenLuyen=1 order by MA_KY_HOC desc
 end
-
+--Insert bang phiếu chấm điểm sv
 create proc rl_insert_RL_PhieuDiem
  @Ma_SInh_Vien varchar(12),
  @Ky_Hoc varchar(3),
@@ -41,10 +41,10 @@ begin
 	set @dem = (select count(Ma_SInh_Vien) from RL_PhieuDiem where Ma_SInh_Vien=@Ma_SInh_Vien and Ky_Hoc=@Ky_Hoc)
 	if(@dem=0)
 	begin
-		INSERT INTO RL_PhieuDiem(Ma_SInh_Vien, Ky_Hoc, T1, T11, T2, T21, T22, T23, T24, T25, T3, T31, T32, T33
-		, T34, T35, T4, T41, T42, T43, T44, T5TTKy)
-		VALUES(@Ma_SInh_Vien, @Ky_Hoc, @T1, @T11, @T2, @T21, @T22, @T23, @T24, @T25, @T3, @T31, @T32, @T33, @T34, @T35 
-		, @T4, @T41, @T42, @T43, @T44, @T5TTKy)
+		INSERT INTO RL_PhieuDiem(Ma_SInh_Vien, Ky_Hoc, T1, T11, T2, T21, T22, T23, T24, T25, T3, T31, T32, T33,
+		T34, T35, T4, T41, T42, T43, T44, T5TTKy)
+		VALUES(@Ma_SInh_Vien, @Ky_Hoc, @T1, @T11, @T2, @T21, @T22, @T23, @T24, @T25, @T3, @T31, @T32, @T33, @T34, @T35,
+		@T4, @T41, @T42, @T43, @T44, @T5TTKy)
 	end
 	if(@dem>0)
 	begin
@@ -54,7 +54,7 @@ begin
 		where Ma_SInh_Vien=@Ma_SInh_Vien and Ky_Hoc = @Ky_Hoc
 	end
 end
----
+---update vào bảng RL_PhieuDiem
 create proc rl_UpdateLT_RL_PhieuDiem
  @Ma_SInh_Vien varchar(12),
  @Ky_Hoc varchar(3),
@@ -87,7 +87,7 @@ begin
 		where Ma_SInh_Vien=@Ma_SInh_Vien and Ky_Hoc = @Ky_Hoc
 	end
 end
----
+---Lấy phiếu rèn luyện của sinh viên
 alter proc rl_get_PhieuRenLuyen
 @masv varchar(12),
 @Ky_Hoc varchar(3)
@@ -99,6 +99,7 @@ begin
 	where Ma_SInh_Vien=@masv and Ky_Hoc=@Ky_Hoc
 end
 --exec rl_get_PhieuRenLuyen '221183404104','241'
+--Kiểm tra vắng học
 create proc rl_checkVang
 @masv varchar(12),
 @kyhoc varchar(3)
@@ -109,6 +110,7 @@ begin
 	group by Ma_Sinh_Vien, NgayDiemdanh
 end
 --exec rl_checkVang '221183404104','232'
+--Lấy danh sách bảng RL_DIEM_TH_RENLUYEN
 alter proc rl_get_DIEM_TH_RENLUYEN
 @masv varchar(12)
 as
@@ -159,20 +161,34 @@ begin
 	FROM   RL_DSLopCham
 	WHERE NguoiDuyet = @masv
 end
----
+
+---Khởi tạo danh sách sinh viên tổng hợp vào bảng RL_DIEM_TH_RENLUYEN
 alter proc rl_KhoiTaoCham
 @KY_HOC varchar(3),
-@NOIDUNGDG nvarchar(150),
-@Khoa varchar(5)
+@NOIDUNGDG nvarchar(max),
+@Khoa varchar(5),
+@NgayBatDau varchar(10),
+@NgayKhoa varchar(10)
 as
 begin
+	declare @tennamhoc nvarchar(200)
+	set @tennamhoc = (select TEN_KY_HOC from S_KY_HOC where MA_KY_HOC=@KY_HOC)
+	--khơi tạo bảng RL_DIEM_TH_RENLUYEN
 	INSERT INTO RL_DIEM_TH_RENLUYEN(MA_SINH_VIEN,HO_LOT, TEN,NGAY_SINH,LOP,KY_HOC,NOIDUNGDG,NGAYTAO)
 	select MA_SINH_VIEN, HO_LOT, TEN, NGAY_SINH, LOP, @KY_HOC, @NOIDUNGDG,GETDATE() from D_HO_SO_SINH_VIEN 
 	where RIGHT(lop,2)=@Khoa and ThoiHoc=0 and TamNgung=0 and 
 	MA_SINH_VIEN not in (select MA_SINH_VIEN from RL_DIEM_TH_RENLUYEN where KY_HOC=@KY_HOC)
+	--Khởi tạo bảng RL_DSLopCham
+	Insert into RL_DSLopCham(Lop, DotDanhGia, Ky_Hoc, NamHoc, NgayBatDau, NgayKhoa, TrangThai, magvcn, NguoiDuyet)
+	select LOP, @NOIDUNGDG, @KY_HOC, @tennamhoc, @NgayBatDau, @NgayKhoa, 0, Ma_giao_vien, Ma_giao_vien
+	from S_DANH_MUC_LOP where KHOA_HOC=@Khoa and Lop not in (select Lop from RL_DSLopCham where KY_HOC=@KY_HOC)
+	--Khởi tạo bảng RL_PhieuDiem
+	INSERT INTO RL_PhieuDiem(Ma_SInh_Vien, Ky_Hoc)
+	select MA_SINH_VIEN, @KY_HOC from D_HO_SO_SINH_VIEN 
+	where RIGHT(lop,2)=@Khoa and ThoiHoc=0 and TamNgung=0 and MA_SINH_VIEN not in (select Ma_SInh_Vien from RL_PhieuDiem where KY_HOC=@KY_HOC)
 end
-
 --exec rl_KhoiTaoCham '241',N'Chấm điểm rèn luyện kỳ 1 năm học 2024-2025','22'
+
 ALTER proc [dbo].[rl_GetLopCham]
 @id int
 as
@@ -324,3 +340,32 @@ CREATE TABLE [dbo].[RL_DIEM_TH_KY_RENLUYEN](
 	[XEP_LOAI] [int] NULL,
 	[TrangThai] [int] NULL
 )
+--- Lấy danh sách lớp
+create proc rl_getLop
+@ky varchar(3),
+@khoa varchar(2)
+as
+begin
+	select * from RL_DSLopCham where Ky_Hoc=@ky and right(lop, 2)=@khoa
+end
+--- lấy danh sách lớp kế hoạch
+alter proc rl_getLopKH
+@ky varchar(3),
+@khoa varchar(2)
+as
+begin
+	if(@khoa='1')
+	begin
+		select id, Lop, Ky_Hoc, NamHoc, DotDanhGia, NgayBatDau, NgayKhoa, TrangThai, NguoiDuyet, SoSV, magvcn, HO_LOT, TEN, TRIM(HO_LOT)+' '+TRIM(TEN) as HOTEN 
+		from RL_DSLopCham l inner join S_GIAO_VIEN gv on l.magvcn=gv.MA_GIAO_VIEN
+		where Ky_Hoc=@ky-- and (right(lop, 2)=@khoa OR right(lop, 2)='1')
+		order by Lop
+	end
+	else
+	begin
+		select id, Lop, Ky_Hoc, NamHoc, DotDanhGia, NgayBatDau, NgayKhoa, TrangThai, NguoiDuyet, SoSV, magvcn, HO_LOT, TEN, TRIM(HO_LOT)+' '+TRIM(TEN) as HOTEN 
+		from RL_DSLopCham l inner join S_GIAO_VIEN gv on l.magvcn=gv.MA_GIAO_VIEN
+		where Ky_Hoc=@ky and right(lop, 2)=@khoa order by RIGHT(lop, 2), Lop
+	end
+end
+--exec rl_getLopKH '241','1'

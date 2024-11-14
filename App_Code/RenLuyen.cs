@@ -58,6 +58,40 @@ public class RenLuyen
         conn.Close();
         return dtb;
     }
+    //Lấy lớp
+    public DataTable rl_getLop(string ky, int khoa)
+    {
+        cmd = new SqlCommand("rl_getLop", conn);
+        cmd.CommandType = CommandType.StoredProcedure;
+        cmd.Parameters.Add("@ky", SqlDbType.NVarChar, 3);
+        cmd.Parameters.Add("@khoa", SqlDbType.Int);
+        cmd.Parameters["@ky"].Value = ky;
+        cmd.Parameters["@khoa"].Value = khoa;
+        conn.Open();
+        da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataTable dtb = new DataTable();
+        da.Fill(dtb);
+        conn.Close();
+        return dtb;
+    }
+    //Lấy ds lớp kế hoacgh
+    public DataTable rl_getLopKH(string ky, string khoa)
+    {
+        cmd = new SqlCommand("rl_getLopKH", conn);
+        cmd.CommandType = CommandType.StoredProcedure;
+        cmd.Parameters.Add("@ky", SqlDbType.NVarChar, 3);
+        cmd.Parameters.Add("@khoa", SqlDbType.VarChar, 2);
+        cmd.Parameters["@ky"].Value = ky;
+        cmd.Parameters["@khoa"].Value = khoa;
+        conn.Open();
+        da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataTable dtb = new DataTable();
+        da.Fill(dtb);
+        conn.Close();
+        return dtb;
+    }
     //Lấy thông tin lớp duyệt
     public DataTable rl_dsLopDuyet(string user)
     {
@@ -325,5 +359,26 @@ public class RenLuyen
         da.Fill(dtb);
         conn.Close();
         return dtb;
+    }
+    //Hàm khởi tạo chấm điểm rèn luyện
+    public int rl_KhoiTaoCham(string kyhoc, string noidung, string khoa, string ngaybd, string ngaykt)
+    {
+        int kq = 0;
+        cmd = new SqlCommand("rl_KhoiTaoCham", conn);
+        cmd.CommandType = CommandType.StoredProcedure;
+        cmd.Parameters.Add("@KY_HOC", SqlDbType.VarChar, 3);
+        cmd.Parameters.Add("@NOIDUNGDG", SqlDbType.NVarChar, int.MaxValue);
+        cmd.Parameters.Add("@Khoa", SqlDbType.VarChar, 2);
+        cmd.Parameters.Add("@NgayBatDau", SqlDbType.VarChar, 10);
+        cmd.Parameters.Add("@NgayKhoa", SqlDbType.VarChar, 10);
+        cmd.Parameters["@KY_HOC"].Value = kyhoc;
+        cmd.Parameters["@NOIDUNGDG"].Value = noidung;
+        cmd.Parameters["@Khoa"].Value = khoa;
+        cmd.Parameters["@NgayBatDau"].Value = ngaybd;
+        cmd.Parameters["@NgayKhoa"].Value = ngaykt;
+        conn.Open();
+        kq = cmd.ExecuteNonQuery();
+        conn.Close();
+        return kq;
     }
 }

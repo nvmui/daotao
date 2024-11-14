@@ -154,6 +154,24 @@ public class RenLuyen
         conn.Close();
         return dtb;
     }
+    //
+    //Lấy kế hoạch chấm điểm
+    public DataTable rl_get_kh_cham_sv(string masv, string ky)
+    {
+        cmd = new SqlCommand("rl_get_kh_cham_sv", conn);
+        cmd.CommandType = CommandType.StoredProcedure;
+        cmd.Parameters.Add("@masv", SqlDbType.VarChar, 12);
+        cmd.Parameters.Add("@ky", SqlDbType.VarChar, 3);
+        cmd.Parameters["@masv"].Value = masv;
+        cmd.Parameters["@ky"].Value = ky;
+        conn.Open();
+        da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataTable dtb = new DataTable();
+        da.Fill(dtb);
+        conn.Close();
+        return dtb;
+    }
     //Kiểm tra số lần vắng
     public DataTable rl_checkVang(string user, string ky)
     {

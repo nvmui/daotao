@@ -23,7 +23,6 @@
             <div class="row">
                 <div class="col-sm-12 col-md-12 col-lg-12">
                     <uc_h:uc_header ID="uc_head" runat="server" />
-                    <%--<asp:Image ID="Image2" runat="server" ImageUrl="~/RLCTCT/img/banner.jpg" Width="100%" Height="100%" />--%>
                 </div>
             </div>
             <div class="row">
@@ -44,7 +43,7 @@
             <div class="row">
                 <div class="col-sm-12 col-md-12 col-lg-12">
                     <uc_footer:uc_footer ID="uc_footer" runat="server" />
-                    <%--<asp:Image ID="Image1" runat="server" ImageUrl="~/RLCTCT/img/footer_bg.jpg" Width="100%" Height="100%" />--%>
+                    
                 </div>
             </div>
         </div>

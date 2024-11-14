@@ -32,11 +32,20 @@ public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
     //Hàm lấy lớp duyệt
     public void get_dsDuyetLop()
     {
+        
         DataTable dtb = new DataTable();
         dtb = rl.rl_dsLopDuyet(username);
-        id = int.Parse(dtb.Rows[0]["id"].ToString());
-        grv_dsLopDuyet.DataSource = dtb;
-        grv_dsLopDuyet.DataBind();        
+        if (dtb.Rows.Count > 0)
+        {
+            id = int.Parse(dtb.Rows[0]["id"].ToString());
+            grv_dsLopDuyet.DataSource = dtb;
+            grv_dsLopDuyet.DataBind();
+        }
+        else
+        {
+            lbl_cham.Visible = true;
+            lbl_cham.Text = "Lớp này chưa được khởi tạo hoặc bạn không có quyền xem";
+        }      
     }
     //lấy kỳ chấm điểm
     public void getky()

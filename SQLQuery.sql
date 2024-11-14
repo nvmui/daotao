@@ -94,9 +94,10 @@ alter proc rl_get_PhieuRenLuyen
 as
 begin
 	declare @tthai int
-	set @tthai = (select TrangThai from RL_DIEM_TH_RENLUYEN where Ma_SInh_Vien=@masv and Ky_Hoc=@Ky_Hoc)
-	select *, @tthai as TrangThai from RL_PhieuDiem 
-	where Ma_SInh_Vien=@masv and Ky_Hoc=@Ky_Hoc
+	--set @tthai = (select TrangThai from RL_DIEM_TH_RENLUYEN where Ma_SInh_Vien=@masv and Ky_Hoc=@Ky_Hoc)
+	select *, TRIM(Ho_Lot)+' '+TRIM(Ten) as Hoten
+	from RL_PhieuDiem p inner join RL_DIEM_TH_RENLUYEN d on p.Ma_SInh_Vien=d.MA_SINH_VIEN
+	where p.Ma_SInh_Vien=@masv and p.Ky_Hoc=@Ky_Hoc
 end
 --exec rl_get_PhieuRenLuyen '221183404104','241'
 --Kiểm tra vắng học
@@ -115,7 +116,8 @@ alter proc rl_get_DIEM_TH_RENLUYEN
 @masv varchar(12)
 as
 begin
-	select * from RL_DIEM_TH_RENLUYEN where MA_SINH_VIEN = @masv
+	select TRIM(HO_LOT)+' '+TRIM(TEN) as Hoten, * from RL_DIEM_TH_RENLUYEN rl
+	where MA_SINH_VIEN = @masv
 end
 
 ALTER proc rl_insert_DIEM_TH_RENLUYEN
@@ -205,7 +207,7 @@ begin
 	where rl.LOP = @lop and KY_HOC= @kyhoc order by TEN, HO_LOT
 end
 
---exec rl_GetLopCham 54
+--exec rl_GetLopCham 94
 
 ---Khoa chấm
 alter proc check_DiemHT
@@ -369,3 +371,13 @@ begin
 	end
 end
 --exec rl_getLopKH '241','1'
+create proc rl_get_kh_cham_sv
+@masv varchar(12),
+@ky varchar(3)
+as
+begin
+	declare @lop varchar(20)
+	set @lop = (select LOP from D_HO_SO_SINH_VIEN where MA_SINH_VIEN=@masv)
+	select * from RL_DSLopCham where Ky_Hoc= @ky and Lop=@lop
+end
+--exec rl_get_kh_cham_sv '241183404109','241'

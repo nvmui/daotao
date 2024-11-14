@@ -1,10 +1,19 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/RLCTCT/renluyen.Master" AutoEventWireup="true" CodeFile="frm_ChamDiemRL.aspx.cs" Inherits="RLCTCT_frm_ChamDiemRL" %>
 
+<%@ Register assembly="Microsoft.ReportViewer.WebForms, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" namespace="Microsoft.Reporting.WebForms" tagprefix="rsweb" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <style type="text/css">
         .pdgia {
             color: #FF0000;
             text-align: center;
+        }
+        .auto-style1 {
+            height: 51px;
+        }
+        .auto-style2 {
+            text-align: center;
+            height: 51px;
         }
     </style>
 </asp:Content>
@@ -12,20 +21,21 @@
     <div class="container  justify-content-center" style="margin: auto; font-family: 'Times New Roman', Times, serif">
         <div class="row text-center">
             <br />
-            <br />
             <div class="col-12">
+                <div class="text-right">
+                    <asp:ImageButton ID="imgCmdBack" runat="server"
+                        ImageUrl="~/RLCTCT/img/cmdBack.gif" OnClick="imgCmdBack_Click" />
+                </div>
                 <fieldset id="FieldTools" runat="server" visible="true">
-                    <br />
-                    <br />
                     <h4 class="text-left">Thực hiện kế hoạch chấm điểm rèn luyện</h4>
-                    <asp:Button runat="server" ID="btn_cham" OnClick="btn_cham_Click" Text="Click vào để chấm điểm rèn luyện" Visible="true" />
-                    <asp:Label ID="lbl_thongbaocham" runat="server" Text="Theo kế hoạch chấm điểm rèn luyện từ ngày 12/12/2024 đến ngày 31/12/2024"></asp:Label>
+                    <asp:Button runat="server" ID="btn_cham" OnClick="btn_cham_Click" Text="Click vào để chấm điểm rèn luyện" Visible="False" />
+                    <asp:Label ID="lbl_thongbaocham" runat="server"></asp:Label><br />
                     <asp:Label ID="lbl_cham" runat="server"></asp:Label>
                     <fieldset id="fld_diem_dg" runat="server" visible="true" class="text-center">
                         <table border="1px" align="center" style="width: 100%">
                             <tr>
                                 <th rowspan="2" style="width: 5%; text-align: center">STT</th>
-                                <th rowspan="2" style="width: 35%; text-align: center">Đợt đánh giá</th>
+                                <th rowspan="2" style="width: 35%; text-align: center">Họ và Tên</th>
                                 <th colspan="4" style="width: 40%; text-align: center">Điểm</th>
                                 <th rowspan="2" style="width: 10%; text-align: center">Xếp loại</th>
                                 <th rowspan="2" style="width: 10%; text-align: center">Tình trạng</th>
@@ -38,7 +48,7 @@
                             </tr>
                             <tr>
                                 <td colspan="11">
-                                    <asp:GridView ID="grv_diemth" runat="server" DataKeyNames="MA_SINH_VIEN" AutoGenerateColumns="False" ShowHeader="False" Width="100%">
+                                    <asp:GridView ID="grv_diemth" runat="server" DataKeyNames="MA_SINH_VIEN" AutoGenerateColumns="False" ShowHeader="False" Width="100%" OnRowCommand="grv_diemth_RowCommand">
                                         <Columns>
                                             <asp:TemplateField HeaderText="STT" HeaderStyle-CssClass="danger" HeaderStyle-HorizontalAlign="Center">
                                                 <ItemTemplate>
@@ -50,7 +60,7 @@
                                             </asp:TemplateField>
                                             <asp:TemplateField HeaderText="Kỳ đánh giá" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
                                                 <ItemTemplate>
-                                                    <asp:Label runat="server" Text='<%# Eval("NOIDUNGDG") %>' />
+                                                    <asp:Label runat="server" Text='<%# Eval("Hoten") %>' />
                                                 </ItemTemplate>
                                                 <ControlStyle Font-Size="Medium"></ControlStyle>
                                                 <HeaderStyle HorizontalAlign="Center"></HeaderStyle>
@@ -104,21 +114,36 @@
                                                 <HeaderStyle HorizontalAlign="Center"></HeaderStyle>
                                                 <ItemStyle Width="10%" CssClass="text-center" />
                                             </asp:TemplateField>
+                                            <asp:ButtonField ButtonType="Button" CommandName="btn_Cham" Text="Chấm điểm" />
+                                            <asp:ButtonField ButtonType="Button" CommandName="btn_phiem" Text="In phiếu" />
                                         </Columns>
                                     </asp:GridView>
                                 </td>
                             </tr>
                         </table>
                         <br />
-                        <br />
                     </fieldset>
-                </fieldset>                
+                </fieldset>          
             </div>
+        </div>
+        <div class="row text-center">
+            <fieldset id="fld_inphieu" runat="server" visible="false">
+                <div class="col-12 col-md-12 col-sm-12">
+                    <div class="text-right">
+                        <asp:Button ID="btn_dong" runat="server" Text="Thoát" CssClass="btn btn-info" OnClick="btn_dong_Click" />
+                    </div>                    
+                    <br />
+                    <rsweb:ReportViewer ID="rv_inphieu" runat="server" Width="100%">
+                    </rsweb:ReportViewer>
+                    <asp:ScriptManager ID="ScriptManager1" runat="server">
+                    </asp:ScriptManager>
+                </div>
+            </fieldset>
         </div>
         <div class="row text-center">
         <fieldset id="fldset_cham_rl" runat="server" visible="false">
             <div class="row d-flex align-items-center justify-content-center" style="background-color: #b1c7c5;">
-                <div class="col-12">
+                <div class="col-12 col-md-12 col-sm-12">
                     <h2 class="pdgia"><strong>PHIẾU ĐÁNH GIÁ KẾT QUẢ RÈN LUYỆN</strong></h2>
                     <h4 class="text-center"><i>(Mỗi kỳ sinh viên chỉ đánh giá kết quả rèn luyện một lần vào cuối ký theo kế hoạch của phòng CTCT)</i></h4>
                     <div class="form-horizontal ">
@@ -271,14 +296,14 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td>1.3</td>
-                                                <td>
+                                                <td class="auto-style1">1.3</td>
+                                                <td class="auto-style1">
                                                     <h5>Điểm thưởng về học tập <strong>(Khoa chấm)</strong></h5>
                                                 </td>
-                                                <td class="text-center">
+                                                <td class="auto-style2">
                                                     <h5>5</h5>
                                                 </td>
-                                                <td class="text-center">
+                                                <td class="auto-style2">
                                                     <asp:TextBox ID="t13" runat="server" Text="0" Width="50px" CssClass="text-center" Enabled="false"></asp:TextBox>
                                                 </td>
                                             </tr>

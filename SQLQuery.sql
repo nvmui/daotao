@@ -12,7 +12,7 @@ begin
 	select * from S_KY_HOC where Ky_RenLuyen=1 order by MA_KY_HOC desc
 end
 --Insert bang phiếu chấm điểm sv
-create proc rl_insert_RL_PhieuDiem
+alter proc rl_insert_RL_PhieuDiem
  @Ma_SInh_Vien varchar(12),
  @Ky_Hoc varchar(3),
  @T1 varchar(5),
@@ -37,25 +37,33 @@ create proc rl_insert_RL_PhieuDiem
  @T5TTKy varchar(5)
 as
 begin
-	declare @dem int
+	declare @dem int, @tthai int
+	set @tthai = (select TrangThai from RL_PhieuDiem where Ma_SInh_Vien=@Ma_SInh_Vien and Ky_Hoc=@Ky_Hoc)
 	set @dem = (select count(Ma_SInh_Vien) from RL_PhieuDiem where Ma_SInh_Vien=@Ma_SInh_Vien and Ky_Hoc=@Ky_Hoc)
-	if(@dem=0)
-	begin
-		INSERT INTO RL_PhieuDiem(Ma_SInh_Vien, Ky_Hoc, T1, T11, T2, T21, T22, T23, T24, T25, T3, T31, T32, T33,
-		T34, T35, T4, T41, T42, T43, T44, T5TTKy)
-		VALUES(@Ma_SInh_Vien, @Ky_Hoc, @T1, @T11, @T2, @T21, @T22, @T23, @T24, @T25, @T3, @T31, @T32, @T33, @T34, @T35,
-		@T4, @T41, @T42, @T43, @T44, @T5TTKy)
+	if(@tthai=0 or @tthai = 1)
+		begin
+		if(@dem=0)
+		begin
+			INSERT INTO RL_PhieuDiem(Ma_SInh_Vien, Ky_Hoc, T1, T11, T2, T21, T22, T23, T24, T25, T3, T31, T32, T33,
+			T34, T35, T4, T41, T42, T43, T44, T5TTKy, TrangThai)
+			VALUES(@Ma_SInh_Vien, @Ky_Hoc, @T1, @T11, @T2, @T21, @T22, @T23, @T24, @T25, @T3, @T31, @T32, @T33, @T34, @T35,
+			@T4, @T41, @T42, @T43, @T44, @T5TTKy, 1)
+		end
+		if(@dem>0)
+		begin
+			update RL_PhieuDiem set T1=@T1, T11=@T11, T2=@T2, T21=@T21, T22=@T22, 
+			T23=@T23, T24=@T24, T25=@T25, T3=@T3, T31=@T31, T32=@T32, T33=@T33, T34=@T34, T35=@T35, 
+			T4=@T4, T41=@T41, T42=@T42, T43=@T43, T44=@T44, T5TTKy=@T5TTKy, TrangThai=1
+			where Ma_SInh_Vien=@Ma_SInh_Vien and Ky_Hoc = @Ky_Hoc
+		end
 	end
-	if(@dem>0)
+	else
 	begin
-		update RL_PhieuDiem set T1=@T1, T11=@T11, T2=@T2, T21=@T21, T22=@T22, 
-		T23=@T23, T24=@T24, T25=@T25, T3=@T3, T31=@T31, T32=@T32, T33=@T33, T34=@T34, T35=@T35, 
-		T4=@T4, T41=@T41, T42=@T42, T43=@T43, T44=@T44, T5TTKy=@T5TTKy
-		where Ma_SInh_Vien=@Ma_SInh_Vien and Ky_Hoc = @Ky_Hoc
+		print 'Đã duyệt nên không chấm được nứa'
 	end
 end
 ---update vào bảng RL_PhieuDiem
-create proc rl_UpdateLT_RL_PhieuDiem
+alter proc rl_UpdateLT_RL_PhieuDiem
  @Ma_SInh_Vien varchar(12),
  @Ky_Hoc varchar(3),
  @T1 varchar(5),
@@ -83,7 +91,7 @@ begin
 	begin
 		update RL_PhieuDiem set LTT1=@T1, LTT11=@T11, LTT2=@T2, LTT21=@T21, LTT22=@T22, 
 		LTT23=@T23, LTT24=@T24, LTT25=@T25, LTT3=@T3, LTT31=@T31, LTT32=@T32, LTT33=@T33, LTT34=@T34, LTT35=@T35, 
-		LTT4=@T4, LTT41=@T41, LTT42=@T42, LTT43=@T43, LTT44=@T44, LTT5TTKy=@T5TTKy
+		LTT4=@T4, LTT41=@T41, LTT42=@T42, LTT43=@T43, LTT44=@T44, LTT5TTKy=@T5TTKy, TrangThai=2
 		where Ma_SInh_Vien=@Ma_SInh_Vien and Ky_Hoc = @Ky_Hoc
 	end
 end
@@ -95,11 +103,12 @@ as
 begin
 	declare @tthai int
 	--set @tthai = (select TrangThai from RL_DIEM_TH_RENLUYEN where Ma_SInh_Vien=@masv and Ky_Hoc=@Ky_Hoc)
-	select *, TRIM(Ho_Lot)+' '+TRIM(Ten) as Hoten
+	select *, TRIM(Ho_Lot)+' '+TRIM(Ten) as Hoten, (case RIGHT(p.Ky_Hoc,1) when '1' then 'I' when '2' then 'II' else N'Hè' end) as HK
 	from RL_PhieuDiem p inner join RL_DIEM_TH_RENLUYEN d on p.Ma_SInh_Vien=d.MA_SINH_VIEN
+	inner join S_KY_HOC k on p.Ky_Hoc=k.MA_KY_HOC
 	where p.Ma_SInh_Vien=@masv and p.Ky_Hoc=@Ky_Hoc
 end
---exec rl_get_PhieuRenLuyen '221183404104','241'
+--exec rl_get_PhieuRenLuyen '241183404109','241'
 --Kiểm tra vắng học
 create proc rl_checkVang
 @masv varchar(12),
@@ -298,7 +307,7 @@ begin
 	DECLARE @MA_SINH_VIEN nvarchar(12)
 	DECLARE MSV_Cursorr CURSOR FOR select rl.Ma_Sinh_Vien From RL_PhieuDiem rl
 	inner join D_HO_SO_SINH_VIEN hs on rl.Ma_SInh_Vien = hs.MA_SINH_VIEN
-	where Ky_Hoc=@ky and RIGHT(hs.LOP,2)=@khoa
+	where Ky_Hoc=@ky and RIGHT(hs.LOP,2)=@khoa and rl.TrangThai=2
 	----
 	OPEN MSV_Cursorr 
 	FETCH NEXT FROM MSV_Cursorr INTO @MA_SINH_VIEN
@@ -381,3 +390,43 @@ begin
 	select * from RL_DSLopCham where Ky_Hoc= @ky and Lop=@lop
 end
 --exec rl_get_kh_cham_sv '241183404109','241'
+---Phòng công tác chính trị tổng hợp theo từng sinh viên
+create proc rl_ctct_TongHop
+@masv varchar(12),
+@ky varchar(3)
+as
+begin
+	update RL_PhieuDiem set CTCTT1 = LTT1, CTCTT11=LTT11, CTCTT2=LTT2, CTCTT21=LTT21, CTCTT22=LTT22, CTCTT23=LTT23, CTCTT24=LTT24, CTCTT25=LTT25,
+	CTCTT3=LTT3, CTCTT31=LTT31, CTCTT32=LTT32, CTCTT33=LTT33, CTCTT34=LTT34, CTCTT35=LTT35, CTCTT4=LTT4, CTCTT41=LTT41, CTCTT42=LTT42, CTCTT43=LTT43,
+	CTCTT44=LTT44, CTCTT5TTKy=TongKhoa
+	where Ma_SInh_Vien = @masv and Ky_Hoc=@ky and TrangThai=2
+	declare @xeploai int
+	set @xeploai = (select (case when DIEMKHOA >=90 then 1 when DIEMKHOA >=80 then 2 when DIEMKHOA >=70 then 3 when DIEMKHOA >=60 then 4
+	when DIEMKHOA >=50 then 5 when DIEMKHOA >=30 then 6 when DIEMKHOA >=20 then 7 else 8 end)
+	from RL_DIEM_TH_RENLUYEN where MA_SINH_VIEN=@masv and KY_HOC=@ky and TrangThai=2)
+	print @xeploai
+	update RL_DIEM_TH_RENLUYEN set DIEMCTCT=DIEMKHOA, XEP_LOAI =@xeploai where MA_SINH_VIEN=@masv and KY_HOC=@ky and TrangThai=2
+end
+--Phòng công tác chính trị tổng hợp theo lớp
+---Khoa chấm điểm theo lớp
+create proc rl_ctct_tonghop_theo_khoa
+@khoa varchar(4),
+@Ky varchar(3)
+as
+begin
+	DECLARE @MA_SINH_VIEN nvarchar(12)
+	DECLARE MSV_Cursorr CURSOR FOR select rl.Ma_Sinh_Vien From RL_PhieuDiem rl
+	inner join D_HO_SO_SINH_VIEN hs on rl.Ma_SInh_Vien = hs.MA_SINH_VIEN
+	where Ky_Hoc=@ky and RIGHT(hs.LOP,2)=@khoa and rl.TrangThai=2
+	----
+	OPEN MSV_Cursorr 
+	FETCH NEXT FROM MSV_Cursorr INTO @MA_SINH_VIEN
+	WHILE @@FETCH_STATUS=0
+	BEGIN
+	execute [dbo].[rl_ctct_TongHop]@MA_SINH_VIEN, @Ky
+	FETCH NEXT FROM MSV_Cursorr INTO @MA_SINH_VIEN
+	END
+	CLOSE MSV_Cursorr
+	DEALLOCATE MSV_Cursorr
+end
+--exec rl_ctct_tonghop_theo_khoa '24', '241'

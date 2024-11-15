@@ -26,7 +26,9 @@
                         </tr>
                         <tr>
                             <td class="text-right">
-                                <asp:Button ID="btn_xemTongHop" runat="server" CssClass="btn btn-primary" Text="Xem báo cáo tổng hợp" OnClick="btn_xemTongHop_Click" />  
+                                <asp:Button ID="btn_xemTongHop" runat="server" CssClass="btn btn-primary" Text="Xem báo cáo tổng hợp" OnClick="btn_xemTongHop_Click" Enabled="false" />
+                                &nbsp;&nbsp;&nbsp;
+                                <a href="/Home/Default.aspx" class="btn btn-primary">Trờ về</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             </td>
                         </tr>
                         <tr>
@@ -248,7 +250,8 @@
         <fieldset id="fldset_cham_rl" runat="server" visible="false">
             <div class="row d-flex align-items-center justify-content-center" style="background-color: #b1c7c5;">
                 <div class="col-12">
-                    <h2 class="pdgia"><strong>PHIẾU ĐÁNH GIÁ KẾT QUẢ RÈN LUYỆNsinh viên chỉ đánh giá kết quả rèn luyện một lần vào cuối ký theo kế hoạch của phòng CTCT)</i></h4>
+                    <h2 class="pdgia"><strong>PHIẾU ĐÁNH GIÁ KẾT QUẢ RÈN LUYỆN</strong></h2>
+                        <h4><i>(Sinh viên chỉ đánh giá kết quả rèn luyện một lần vào cuối ký theo kế hoạch của phòng CTCT)</i></h4>
                     <div class="form-horizontal ">
                         <table class="col-md-12 form-group" align="center" style="width: auto">
                             <tr>

@@ -361,6 +361,21 @@ public class RenLuyen
         conn.Close();
         return kq;
     }
+    //Hàm phòng công tác chính trị tổng hợp
+    public int rl_ctct_tonghop_theo_khoa(string khoa, string ky)
+    {
+        int kq = 0;
+        cmd = new SqlCommand("rl_ctct_tonghop_theo_khoa", conn);
+        cmd.CommandType = CommandType.StoredProcedure;
+        cmd.Parameters.Add("@khoa", SqlDbType.VarChar, 4);
+        cmd.Parameters.Add("@Ky", SqlDbType.VarChar, 3);
+        cmd.Parameters["@khoa"].Value = khoa;
+        cmd.Parameters["@Ky"].Value = ky;
+        conn.Open();
+        kq = cmd.ExecuteNonQuery();
+        conn.Close();
+        return kq;
+    }
     //Lấy danh sách khoa chấm
     public DataTable rl_getDSKhoaCham(string ky, string khoa)
     {

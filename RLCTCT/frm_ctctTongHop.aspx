@@ -1,19 +1,16 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/RLCTCT/renluyen.master" AutoEventWireup="true" CodeFile="frm_KhoaCham.aspx.cs" Inherits="RLCTCT_frm_KhoaCham" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/RLCTCT/ctct.master" AutoEventWireup="true" CodeFile="frm_ctctTongHop.aspx.cs" Inherits="RLCTCT_frm_ctctTongHop" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
-</asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder2" Runat="Server">
     <div class="container">
         <div class="row ">
             <div class="col-12 col-md-12 col-sm-12 text-center">
                 <br />
                 <div class="text-right">
-                    <a href="/Home/Default.aspx" class="btn btn-primary">Trờ về</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </div>
                 <table align="center">
                     <tr>
                         <td colspan="2">
-                            <h4 class="text-center">KHOA CHẤM ĐIỂM RÈN LUYỆN CÁC LỚP THEO KHÓA VÀO TRƯỜNG</h4>
+                            <h4 class="text-center">TỔNG HỢP ĐIỂM RÈN LUYỆN CÁC LỚP THEO KHÓA VÀO TRƯỜNG</h4>
                         </td>
                     </tr>
                     <tr>
@@ -90,26 +87,18 @@
                                 <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Width="5%" />
                                 <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                                 </asp:BoundField>
-                                <asp:BoundField DataField="TBD4" HeaderText="Điểm TB thang 4">
+                                <asp:BoundField HeaderText="PHÒNG CTCT KIỂN TRA (Tổng hợp, xếp loại)">
+                                <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Width="10%" />
+                                <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                                </asp:BoundField>
+                                <asp:BoundField HeaderText="Xếp loại" >
                                 <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Width="5%" />
                                 <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                                 </asp:BoundField>
-                                <asp:BoundField DataField="DIEMD7" HeaderText="Sô môn dưới 7 điểm" >
-                                <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Width="5%" />
-                                <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-                                </asp:BoundField>
-                                <asp:BoundField DataField="DIEMF" HeaderText="Số môn Điểm F" >
-                                <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Width="5%" />
-                                <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-                                </asp:BoundField>
-                                <asp:BoundField DataField="T12" HeaderText="Điểm mục 1.2" >
-                                <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Width="5%" />
-                                <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-                                </asp:BoundField>
-                                <asp:BoundField DataField="T13" HeaderText="Điểm mục 1.3">
-                                <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Width="5%" />
-                                <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-                                </asp:BoundField>
+                                <asp:ButtonField ButtonType="Button" CommandName="btn_xemPhieu" Text="Xem phiếu">
+                                <HeaderStyle Width="10%" />
+                                <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" Width="10%" />
+                                </asp:ButtonField>
                             </Columns>
                             <FooterStyle BackColor="#99CCCC" ForeColor="#003399" />
                             <HeaderStyle BackColor="#003399" Font-Bold="True" ForeColor="#CCCCFF" CssClass="text-center" />

@@ -10,24 +10,36 @@ using System.Web.UI.WebControls;
 public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
 {
     RenLuyen rl = new RenLuyen();
-    string username = "";
-    int id;
+    string username = "8340109";
+    int id = 0;
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["USERNAME"] != null)
-        {
-            username = Session["USERNAME"].ToString().Trim();
+        //if (Session["USERNAME"] != null)
+        //{
+        //    username = Session["USERNAME"].ToString().Trim();
             if (!IsPostBack)
             {
                 //username = "221183404140";
                 getky();
                 get_dsDuyetLop();
+                id = int.Parse(lbl_id.Text.ToString().Trim());
+            if (id == 0)
+            {
+                btn_xemTongHop.Enabled = false;
+            }
+            else
+            {
+                btn_xemTongHop.Enabled = true;
+            }
+            {
+
             }
         }
-        else
-        {
-            Response.Redirect("~/logout.aspx");
-        }
+        //}
+        //else
+        //{
+        //    Response.Redirect("~/logout.aspx");
+        //}
     }
     //Hàm lấy lớp duyệt
     public void get_dsDuyetLop()
@@ -38,11 +50,13 @@ public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
         if (dtb.Rows.Count > 0)
         {
             id = int.Parse(dtb.Rows[0]["id"].ToString());
+            lbl_id.Text = id.ToString();
             grv_dsLopDuyet.DataSource = dtb;
             grv_dsLopDuyet.DataBind();
         }
         else
         {
+            lbl_id.Text = "0";
             lbl_cham.Visible = true;
             lbl_cham.Text = "Lớp này chưa được khởi tạo hoặc bạn không có quyền xem";
         }      
@@ -248,7 +262,7 @@ public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
         {
             int dong = Convert.ToInt32(e.CommandArgument.ToString());
             id = int.Parse(grv_dsLopDuyet.Rows[dong].Cells[1].Text.ToString());
-            lbl_id.Text = id.ToString();
+            //lbl_id.Text = id.ToString();
             laydslopTongHop(id);
             flds_xembangTonghop.Visible = false;
         }
@@ -284,6 +298,7 @@ public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
     protected void btn_xemTongHop_Click(object sender, EventArgs e)
     {
         flds_xembangTonghop.Visible = true;
+        id = int.Parse(lbl_id.Text.ToString().Trim());
         DataTable dtb = new DataTable("dsTongHopLop");
         dtb = rl.rl_GetLopCham(id);
         if (dtb.Rows.Count > 0)
@@ -304,9 +319,9 @@ public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
         }
         else
         {
-            lbl_mess.Visible = true;
-            lbl_mess.Text = "Lớp này chưa được duyệt!";
+            rpv_dsTongHopLop.Visible = false;
+            lbl_cham.Visible = true;
+            lbl_cham.Text = "Lớp này chưa được duyệt!";
         }
-
     }
 }

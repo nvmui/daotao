@@ -12,9 +12,9 @@ public partial class RLCTCT_frm_CTCTCham : System.Web.UI.Page
     string username = "";
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["USERNAME"] != null)
-        {
-            username = Session["USERNAME"].ToString().Trim();
+        //if (Session["USERNAME"] != null)
+        //{
+        //    username = Session["USERNAME"].ToString().Trim();
             if (!IsPostBack)
             {
                 lbl_thongbao.Visible = false;
@@ -22,11 +22,11 @@ public partial class RLCTCT_frm_CTCTCham : System.Web.UI.Page
                 getky();
                 getKhoaHoc();
             }
-        }
-        else
-        {
-            Response.Redirect("~/logout.aspx");
-        }
+        //}
+        //else
+        //{
+        //    Response.Redirect("~/logout.aspx");
+        //}
     }
     //lấy kỳ chấm điểm
     public void getky()
@@ -39,6 +39,7 @@ public partial class RLCTCT_frm_CTCTCham : System.Web.UI.Page
         drl_Ky.DataValueField = "MA_KY_HOC";
         drl_Ky.DataBind();
     }
+    
     //lấy kỳ chấm điểm
     public void getKhoaHoc()
     {
@@ -71,9 +72,9 @@ public partial class RLCTCT_frm_CTCTCham : System.Web.UI.Page
 
     protected void btn_luuKehoach_Click(object sender, EventArgs e)
     {
-        string ngay_bd, ngay_kt;
+        string ngay_bd, ngay_kt, ngay_bdcvht, ngay_ktcvht, ngay_bdkhoa, ngay_ktkhoa;
         
-        if (txt_ngaybd.Text.ToString().Trim() == ""|| txt_ngaykt.Text.ToString().Trim() == ""|| txt_noidung.Text.ToString().Trim()=="")
+        if (txt_ngaybd.Text.ToString().Trim() == ""|| txt_ngaykt.Text.ToString().Trim() == ""|| txt_ngaybd_cvht.Text.ToString().Trim() == "" || txt_ngaykt_cvht.Text.ToString().Trim() == "" || txt_ngaybd_khoa.Text.ToString().Trim() == "" || txt_ngaykt_khoa.Text.ToString().Trim() == "" || txt_noidung.Text.ToString().Trim()=="")
         {
             lbl_thongbao.Visible = true;
             lbl_thongbao.Text = "Bạn phải nhập đầy đủ nội dung";
@@ -87,7 +88,17 @@ public partial class RLCTCT_frm_CTCTCham : System.Web.UI.Page
             ngay_bd = ngaybd.ToString("dd/MM/yyyy");
             DateTime ngaykt = DateTime.Parse(txt_ngaykt.Text.ToString().Trim());
             ngay_kt = ngaykt.ToString("dd/MM/yyyy");
-            int kq = rl.rl_KhoiTaoCham(ky, noidung, khoa, ngay_bd, ngay_kt);
+            DateTime ngaybdcvht = DateTime.Parse(txt_ngaybd_cvht.Text.ToString().Trim());
+            ngay_bdcvht = ngaybdcvht.ToString("dd/MM/yyyy");
+            DateTime ngayktcvht = DateTime.Parse(txt_ngaykt_cvht.Text.ToString().Trim());
+            ngay_ktcvht = ngayktcvht.ToString("dd/MM/yyyy");
+            //
+            DateTime ngaybdkhoa = DateTime.Parse(txt_ngaybd_khoa.Text.ToString().Trim());
+            ngay_bdkhoa = ngaybdkhoa.ToString("dd/MM/yyyy");
+            DateTime ngayktkhoa = DateTime.Parse(txt_ngaykt_khoa.Text.ToString().Trim());
+            ngay_ktkhoa = ngayktkhoa.ToString("dd/MM/yyyy");
+            //
+            int kq = rl.rl_KhoiTaoCham(ky, noidung, khoa, ngay_bd, ngay_kt, ngay_bdcvht, ngay_ktcvht, ngay_bdkhoa, ngay_ktkhoa);
             if (kq > 0)
             {
                 lbl_thongbao.Visible = true;

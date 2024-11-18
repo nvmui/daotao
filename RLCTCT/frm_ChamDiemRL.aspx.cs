@@ -10,8 +10,8 @@ using System.Web.UI.WebControls;
 public partial class RLCTCT_frm_ChamDiemRL : System.Web.UI.Page
 {
     RenLuyen rl = new RenLuyen();
-    string username = "";
-    //string username = "241183404109";
+    //string username = "";
+    string username = "241183404109";
     protected void Page_Load(object sender, EventArgs e)
     {
         if (Session["USERNAME"] != null)

@@ -13,13 +13,23 @@ public partial class RLCTCT_frm_rpXemDSLop_KH : System.Web.UI.Page
     string username = "";
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
+        if (Session["USERNAME"] != null)
         {
-            getky();
-            getKhoaHoc();
-            string ky = drl_Ky.SelectedValue.ToString().Trim();
-            int khoa = int.Parse(drl_khoaHoc.SelectedValue.ToString().Trim());
-            getLop(ky, khoa);
+            username = Session["USERNAME"].ToString().Trim();
+            if (!IsPostBack)
+            {
+                getky();
+                getKhoaHoc();
+                getKhoaChuyenMon();
+                string ky = drl_Ky.SelectedValue.ToString().Trim();
+                int khoa = int.Parse(drl_khoaHoc.SelectedValue.ToString().Trim());
+                string makhoa = drl_khoacm.SelectedValue.ToString().Trim();
+                getLop(ky, khoa, makhoa);
+            }
+        }
+        else
+        {
+            Response.Redirect("~/logout.aspx");
         }
     }
     //lấy kỳ chấm điểm
@@ -48,11 +58,26 @@ public partial class RLCTCT_frm_rpXemDSLop_KH : System.Web.UI.Page
         drl_khoaHoc.DataValueField = "KHOA_HOC";
         drl_khoaHoc.DataBind();
     }
-    //lấy lớp
-    public void getLop(string ky, int khoa)
+    //lấy khoa chuyên môn
+    public void getKhoaChuyenMon()
     {
         DataTable dtb = new DataTable();
-        dtb = rl.rl_getLop(ky, khoa);
+        dtb = rl.getKhoaChuyenMon();
+        DataRow row = dtb.NewRow();
+        row["MaKhoa"] = 1;
+        row["TenKhoa"] = "==Chọn tất cả==";
+        dtb.Rows.InsertAt(row, 0);
+        drl_khoacm.DataSource = dtb;
+        drl_khoacm.DataTextField = "MaKhoa";
+        drl_khoacm.DataTextField = "TenKhoa";
+        drl_khoacm.DataValueField = "MaKhoa";
+        drl_khoacm.DataBind();
+    }
+    //lấy lớp
+    public void getLop(string ky, int khoa, string makhoa)
+    {
+        DataTable dtb = new DataTable();
+        dtb = rl.rl_getLop(ky, khoa, makhoa);
         drl_lop.DataSource = dtb;
         drl_lop.DataTextField = "id";
         drl_lop.DataTextField = "Lop";
@@ -127,6 +152,41 @@ public partial class RLCTCT_frm_rpXemDSLop_KH : System.Web.UI.Page
                 lbl_mess.Text = "Lớp này chưa được khởi tạo!"+khoa;
                 rv_dsLop.Visible = false;
             }
+        }else if (rd_theoKhoacm.Checked)
+        {
+            lbl_mess.Visible = true;
+            rv_dsLop.Visible = true;
+            DateTime date = DateTime.Now;
+            string ngay = date.Day.ToString();
+            string thang = date.Month.ToString();
+            string nam = date.Year.ToString();
+            string ky = drl_Ky.SelectedValue.ToString().Trim();
+            string khoa = drl_khoaHoc.SelectedValue.ToString().Trim();
+            string makhoa = drl_khoacm.SelectedValue.ToString().Trim();
+            DataTable dtb = new DataTable("DSLopTH_Khoa");
+            dtb = rl.rl_getDSCTCT_TongHop_TheoKhoa(ky, khoa, makhoa);
+            if (dtb.Rows.Count > 0)
+            {
+                lbl_mess.Visible = false;
+                rv_dsLop.Visible = true;
+                rv_dsLop.ProcessingMode = ProcessingMode.Local;
+                rv_dsLop.LocalReport.ReportPath = Server.MapPath("rp_dsTonhop_Khoa.rdlc");
+                rv_dsLop.LocalReport.DataSources.Clear();
+                rv_dsLop.LocalReport.DataSources.Add(new ReportDataSource("DSLopTH_Khoa", dtb));
+                ReportParameter[] rpPara = new ReportParameter[] {
+                    new ReportParameter("Ngay", ngay.ToString()),
+                    new ReportParameter("Thang",thang.ToString()),
+                    new ReportParameter("Nam",nam.ToString())
+                };
+                rv_dsLop.LocalReport.SetParameters(rpPara);
+                rv_dsLop.LocalReport.Refresh();
+            }
+            else
+            {
+                lbl_mess.Visible = true;
+                lbl_mess.Text = "Lớp này chưa được tổng hợp!";
+                rv_dsLop.Visible = false;
+            }
         }
     }
 
@@ -150,7 +210,8 @@ public partial class RLCTCT_frm_rpXemDSLop_KH : System.Web.UI.Page
     {
         string ky = drl_Ky.SelectedValue.ToString().Trim();
         int khoa = int.Parse(drl_khoaHoc.SelectedValue.ToString().Trim());
-        getLop(ky, khoa);
+        string makhoa = drl_khoacm.SelectedValue.ToString().Trim();
+        getLop(ky, khoa, makhoa);
     }
 
     protected void rd_theo_khoa_CheckedChanged(object sender, EventArgs e)
@@ -163,7 +224,25 @@ public partial class RLCTCT_frm_rpXemDSLop_KH : System.Web.UI.Page
         }
         else
         {
-            drl_lop.Visible = true;
+            drl_lop.Visible = false;
+            dr_khoa.Visible = false;
+            rv_dsLop.Visible = false;
+        }
+    }
+
+    protected void drl_khoacm_TextChanged(object sender, EventArgs e)
+    {
+        string ky = drl_Ky.SelectedValue.ToString().Trim();
+        int khoa = int.Parse(drl_khoaHoc.SelectedValue.ToString().Trim());
+        string makhoa = drl_khoacm.SelectedValue.ToString().Trim();
+        getLop(ky, khoa, makhoa);
+    }
+
+    protected void rd_theoKhoacm_CheckedChanged(object sender, EventArgs e)
+    {
+        if (rd_theoKhoacm.Checked)
+        {
+            drl_lop.Visible = false;
             dr_khoa.Visible = false;
             rv_dsLop.Visible = false;
         }

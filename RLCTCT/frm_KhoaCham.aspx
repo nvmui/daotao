@@ -26,6 +26,14 @@
                     </tr>
                     <tr>
                         <td class="text-right">
+                            <asp:Label ID="Label1" Text="Chọn khoa đánh giá" runat="server" Font-Bold="True"></asp:Label>
+                        </td>
+                        <td>
+                            <asp:DropDownList ID="drl_khoa" runat="server" Width="250px" AutoPostBack="True"></asp:DropDownList>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">
                             <asp:Label ID="Label2" Text="Chọn khóa đánh giá" runat="server" Font-Bold="True"></asp:Label>
                         </td>
                         <td>
@@ -42,7 +50,9 @@
                     </tr>
                     <tr>
                         <td colspan="2" class="text-center">
-                            <asp:Button ID="btn_thucHien" runat="server" Text="Thực hiện" OnClick="btn_thucHien_Click"></asp:Button>
+                            <asp:Button ID="btn_thucHien" runat="server" Text="Thực hiện chấm" OnClick="btn_thucHien_Click"></asp:Button>
+                            &nbsp;&nbsp;&nbsp;
+                            <asp:Button ID="btn_xemDS" runat="server" Text="Xem danh sách" OnClick="btn_xemDS_Click"></asp:Button>
                         </td>
                     </tr>
                     <tr>
@@ -76,6 +86,9 @@
                                 <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Width="15%" />
                                 </asp:BoundField>
                                 <asp:BoundField DataField="NGAY_SINH" HeaderText="Ngày Sinh" >
+                                <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Width="10%" />
+                                </asp:BoundField>
+                                <asp:BoundField DataField="LOP" HeaderText="Lớp">
                                 <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Width="10%" />
                                 </asp:BoundField>
                                 <asp:BoundField DataField="T5TTKy" HeaderText="Điểm SV Chấm" >

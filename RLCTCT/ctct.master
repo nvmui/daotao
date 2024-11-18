@@ -1,6 +1,29 @@
 ﻿<%@ Master Language="C#" MasterPageFile="~/RLCTCT/renluyen.master" AutoEventWireup="true" CodeFile="ctct.master.cs" Inherits="RLCTCT_ctct" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+    <style>
+        .menu li {
+            list-style: none;
+            float: left;
+            margin-left: 15px;
+            display: inline-block;
+        }
+        .menu{
+            float: right;
+        }
+        .home ul{
+            float:left;
+            text-align:left
+        }
+        .home li{
+            list-style: none;
+            float:none;
+        }  
+        .pdgia {
+            color: #FF0000;
+            text-align: center;
+        }
+    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
     <div class="container text-center">
@@ -9,15 +32,13 @@
                 <br />
                 <h4><strong>THỰC HIỆN CHẤM ĐIỂM RÈN LUYỆN</strong></h4>
                 <div class="text-right">
-                    <a href="frm_CTCTCham.aspx" class="btn btn-primary">Tạo kế hoạch</a>
-                    <%--<asp:Button ID="btn_khoitaocham" runat="server" Text="Tạo kế hoạch" CssClass="btn btn-primary" />--%>
-                    &nbsp;<a href="frm_rpXemDSLop_KH.aspx" class="btn btn-primary">Xem kế hoạch và ds sinh viên</a>
-                    <%--<asp:Button ID="btn_khoitao_svcham" runat="server" Text="Xem kế hoạch và ds sinh viên" CssClass="btn btn-primary" />--%>
-                    &nbsp;<a href="frm_ctctTongHop.aspx" class="btn btn-primary">Tổng hợp điểm</a>
-                    <%--<asp:Button ID="btn_tonghop" runat="server" Text="Tổng hợp điểm" CssClass="btn btn-primary"  />--%>
-                    &nbsp;<a href="#" class="btn btn-primary">Xem và xuất báo cáo</a>&nbsp;
-                    <a href="/Home/Default.aspx" class="btn btn-primary">Trờ về</a>
-                    <%--<asp:Button ID="btn_xuatbaocao" runat="server" Text="Xem và xuất báo cáo" CssClass="btn btn-primary"/>--%>
+                    <ul class="menu">
+                        <li><a href="frm_Homctct.aspx" class="btn btn-primary">Home</a></li>
+                        <li><a href="frm_CTCTCham.aspx" class="btn btn-primary">Tạo kế hoạch</a></li>
+                        <li><a href="frm_ctctTongHop.aspx" class="btn btn-primary">Duyệt điểm RL</a></li>
+                        <li><a href="frm_rpXemDSLop_KH.aspx" class="btn btn-primary">Báo cáo tổng hợp</a></li>
+                        <li><a href="/Home/Default.aspx" class="btn btn-primary">Trờ về</a></li>
+                    </ul>
                 </div>
                 <br />
             </div>

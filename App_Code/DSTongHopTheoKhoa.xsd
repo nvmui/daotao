@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DSTongHopTheoKhoa" targetNamespace="http://tempuri.org/DSTongHopTheoKhoa.xsd" xmlns:mstns="http://tempuri.org/DSTongHopTheoKhoa.xsd" xmlns="http://tempuri.org/DSTongHopTheoKhoa.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Web.config" AppSettingsPropertyName="cdktkh_ConnStr" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="cdktkh_ConnStr (Web.config)" ParameterPrefix="@" PropertyReference="AppConfig.System.Configuration.ConfigurationManager.0.ConnectionStrings.cdktkh_ConnStr.ConnectionString" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DSTongHopTheoKhoa" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_DataSetName="DSTongHopTheoKhoa" msprop:Generator_UserDSName="DSTongHopTheoKhoa">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="rl_getDsctctTongHop_theokhao" msprop:Generator_TableClassName="rl_getDsctctTongHop_theokhaoDataTable" msprop:Generator_TableVarName="tablerl_getDsctctTongHop_theokhao" msprop:Generator_TablePropName="rl_getDsctctTongHop_theokhao" msprop:Generator_RowDeletingName="rl_getDsctctTongHop_theokhaoRowDeleting" msprop:Generator_RowChangingName="rl_getDsctctTongHop_theokhaoRowChanging" msprop:Generator_RowEvHandlerName="rl_getDsctctTongHop_theokhaoRowChangeEventHandler" msprop:Generator_RowDeletedName="rl_getDsctctTongHop_theokhaoRowDeleted" msprop:Generator_UserTableName="rl_getDsctctTongHop_theokhao" msprop:Generator_RowChangedName="rl_getDsctctTongHop_theokhaoRowChanged" msprop:Generator_RowEvArgName="rl_getDsctctTongHop_theokhaoRowChangeEvent" msprop:Generator_RowClassName="rl_getDsctctTongHop_theokhaoRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="HOTEN" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnHOTEN" msprop:Generator_ColumnPropNameInRow="HOTEN" msprop:Generator_ColumnPropNameInTable="HOTENColumn" msprop:Generator_UserColumnName="HOTEN" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="151" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="tenPhanloaiRL" msprop:Generator_ColumnVarNameInTable="columntenPhanloaiRL" msprop:Generator_ColumnPropNameInRow="tenPhanloaiRL" msprop:Generator_ColumnPropNameInTable="tenPhanloaiRLColumn" msprop:Generator_UserColumnName="tenPhanloaiRL" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="20" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="HK" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnHK" msprop:Generator_ColumnPropNameInRow="HK" msprop:Generator_ColumnPropNameInTable="HKColumn" msprop:Generator_UserColumnName="HK" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="5" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Ky_Hoc" msprop:Generator_ColumnVarNameInTable="columnKy_Hoc" msprop:Generator_ColumnPropNameInRow="Ky_Hoc" msprop:Generator_ColumnPropNameInTable="Ky_HocColumn" msprop:Generator_UserColumnName="Ky_Hoc" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="3" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="NamHoc" msprop:Generator_ColumnVarNameInTable="columnNamHoc" msprop:Generator_ColumnPropNameInRow="NamHoc" msprop:Generator_ColumnPropNameInTable="NamHocColumn" msprop:Generator_UserColumnName="NamHoc" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="150" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="HO_LOT" msprop:Generator_ColumnVarNameInTable="columnHO_LOT" msprop:Generator_ColumnPropNameInRow="HO_LOT" msprop:Generator_ColumnPropNameInTable="HO_LOTColumn" msprop:Generator_UserColumnName="HO_LOT">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="100" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="TEN" msprop:Generator_ColumnVarNameInTable="columnTEN" msprop:Generator_ColumnPropNameInRow="TEN" msprop:Generator_ColumnPropNameInTable="TENColumn" msprop:Generator_UserColumnName="TEN" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="TenKhoa" msprop:Generator_ColumnVarNameInTable="columnTenKhoa" msprop:Generator_ColumnPropNameInRow="TenKhoa" msprop:Generator_ColumnPropNameInTable="TenKhoaColumn" msprop:Generator_UserColumnName="TenKhoa" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="55" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="NGAY_SINH" msprop:Generator_ColumnVarNameInTable="columnNGAY_SINH" msprop:Generator_ColumnPropNameInRow="NGAY_SINH" msprop:Generator_ColumnPropNameInTable="NGAY_SINHColumn" msprop:Generator_UserColumnName="NGAY_SINH" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="10" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="LOP" msprop:Generator_ColumnVarNameInTable="columnLOP" msprop:Generator_ColumnPropNameInRow="LOP" msprop:Generator_ColumnPropNameInTable="LOPColumn" msprop:Generator_UserColumnName="LOP">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="20" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="DIEMCTCT" msprop:Generator_ColumnVarNameInTable="columnDIEMCTCT" msprop:Generator_ColumnPropNameInRow="DIEMCTCT" msprop:Generator_ColumnPropNameInTable="DIEMCTCTColumn" msprop:Generator_UserColumnName="DIEMCTCT" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="4" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="NgayKhoa" msprop:Generator_ColumnVarNameInTable="columnNgayKhoa" msprop:Generator_ColumnPropNameInRow="NgayKhoa" msprop:Generator_ColumnPropNameInTable="NgayKhoaColumn" msprop:Generator_UserColumnName="NgayKhoa" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="20" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

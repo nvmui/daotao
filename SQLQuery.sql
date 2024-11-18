@@ -179,19 +179,23 @@ alter proc rl_KhoiTaoCham
 @NOIDUNGDG nvarchar(max),
 @Khoa varchar(5),
 @NgayBatDau varchar(10),
-@NgayKhoa varchar(10)
+@NgayKhoa varchar(10),
+@NgayBDCVHT varchar(10),
+@NgayKTCVHT varchar(10),
+@NgayBDKhoa varchar(10),
+@NgayKTKhoa varchar(10)
 as
 begin
 	declare @tennamhoc nvarchar(200)
 	set @tennamhoc = (select TEN_KY_HOC from S_KY_HOC where MA_KY_HOC=@KY_HOC)
 	--khơi tạo bảng RL_DIEM_TH_RENLUYEN
 	INSERT INTO RL_DIEM_TH_RENLUYEN(MA_SINH_VIEN,HO_LOT, TEN,NGAY_SINH,LOP,KY_HOC,NOIDUNGDG,NGAYTAO)
-	select MA_SINH_VIEN, HO_LOT, TEN, NGAY_SINH, LOP, @KY_HOC, @NOIDUNGDG,GETDATE() from D_HO_SO_SINH_VIEN 
+	select MA_SINH_VIEN, HO_LOT, TEN, NGAY_SINH, LOP, @KY_HOC, @tennamhoc,GETDATE() from D_HO_SO_SINH_VIEN 
 	where RIGHT(lop,2)=@Khoa and ThoiHoc=0 and TamNgung=0 and 
 	MA_SINH_VIEN not in (select MA_SINH_VIEN from RL_DIEM_TH_RENLUYEN where KY_HOC=@KY_HOC)
 	--Khởi tạo bảng RL_DSLopCham
-	Insert into RL_DSLopCham(Lop, DotDanhGia, Ky_Hoc, NamHoc, NgayBatDau, NgayKhoa, TrangThai, magvcn, NguoiDuyet)
-	select LOP, @NOIDUNGDG, @KY_HOC, @tennamhoc, @NgayBatDau, @NgayKhoa, 0, Ma_giao_vien, Ma_giao_vien
+	Insert into RL_DSLopCham(Lop, DotDanhGia, Ky_Hoc, NamHoc, MaKhoa, NgayBatDau, NgayKhoa,NgayBDCVHT,NgayKTCVHT,NgayBDKhoa,NgayKTKhoa, TrangThai, magvcn, NguoiDuyet)
+	select LOP, @NOIDUNGDG, @KY_HOC, @tennamhoc, KHOA, @NgayBatDau, @NgayKhoa, @NgayBDCVHT, @NgayKTCVHT, @NgayBDKhoa, @NgayKTKhoa,  0, Ma_giao_vien, Ma_giao_vien
 	from S_DANH_MUC_LOP where KHOA_HOC=@Khoa and Lop not in (select Lop from RL_DSLopCham where KY_HOC=@KY_HOC)
 	--Khởi tạo bảng RL_PhieuDiem
 	INSERT INTO RL_PhieuDiem(Ma_SInh_Vien, Ky_Hoc)
@@ -290,9 +294,9 @@ begin
 	declare @tong varchar(5)
 	set @tong = CONVERT(float, @t12)+CONVERT(float,@t13)+ CONVERT(float,@diemlop)
 	update RL_PhieuDiem set T12=@t12, T121=@t121, T122=@t122, T123=@t123, T124=@t124, T125=@t125, 
-	T13=@t13, T131=@t131, T132=@t132, TongKhoa=@tong, TBD4=@diemtb, DIEMD7=@duoi7, DIEMF=@diemF
+	T13=@t13, T131=@t131, T132=@t132, TongKhoa=@tong, TBD4=@diemtb, DIEMD7=@duoi7, DIEMF=@diemF, TrangThai=3
 	where Ma_SInh_Vien=@masv and Ky_Hoc=@ky
-	update RL_DIEM_TH_RENLUYEN set DIEMKHOA = @tong where MA_SINH_VIEN=@masv and Ky_Hoc=@ky
+	update RL_DIEM_TH_RENLUYEN set DIEMKHOA = @tong, TrangThai=3 where MA_SINH_VIEN=@masv and Ky_Hoc=@ky
 	print @tong
 	print @t12
 	print @t13
@@ -301,13 +305,15 @@ end
 ---Khoa chấm điểm theo lớp
 alter proc rl_KhoaCham
 @khoa varchar(4),
-@Ky varchar(3)
+@Ky varchar(3),
+@makhoa varchar(5)
 as
 begin
 	DECLARE @MA_SINH_VIEN nvarchar(12)
 	DECLARE MSV_Cursorr CURSOR FOR select rl.Ma_Sinh_Vien From RL_PhieuDiem rl
 	inner join D_HO_SO_SINH_VIEN hs on rl.Ma_SInh_Vien = hs.MA_SINH_VIEN
-	where Ky_Hoc=@ky and RIGHT(hs.LOP,2)=@khoa and rl.TrangThai=2
+	inner join RL_DSLopCham lc on hs.LOP = lc.Lop
+	where rl.Ky_Hoc=@ky and RIGHT(hs.LOP,2)=@khoa and rl.TrangThai=2 and lc.Ky_Hoc=@Ky and lc.MakHoa=@makhoa
 	----
 	OPEN MSV_Cursorr 
 	FETCH NEXT FROM MSV_Cursorr INTO @MA_SINH_VIEN
@@ -319,26 +325,45 @@ begin
 	CLOSE MSV_Cursorr
 	DEALLOCATE MSV_Cursorr
 end
---exec rl_KhoaCham '22', '241'
+--exec rl_KhoaCham '22', '241','834'
 -- lấy khóa học
 alter proc rl_getKhoa
 as
 begin
 	select top(5) * from S_KHOA_HOC order by KHOA_HOC desc
 end
-----Lấy danh sách lớp sau khi chấm
-create proc rl_getDSKhoaCham
-@ky varchar(3),
+----Lấy danh sách các khoa
+alter proc rl_getKhoaChuyenMon
+as
+begin
+	select k.MaKhoa, k.TenKhoa from S_DANH_MUC_KHOA k inner join RL_DSLopCham lc on k.MaKhoa=lc.MaKhoa
+	--where RIGHT(lop,2)=@khoa
+	group by k.MaKhoa, k.TenKhoa	
+end
+----Lấy danh sách các khoa theo khoa
+create proc rl_getKhoaChuyenMon_theoKhoa
 @khoa varchar(2)
 as
 begin
-	select pd.MA_SINH_VIEN, HO_LOT+' '+TEN as HOTEN, LOP, NGAY_SINH, T5TTKy, LTT5TTKy, 
+	select k.MaKhoa, k.TenKhoa from S_DANH_MUC_KHOA k inner join RL_DSLopCham lc on k.MaKhoa=lc.MaKhoa
+	where RIGHT(lop,2)=@khoa
+	group by k.MaKhoa, k.TenKhoa	
+end
+----Lấy danh sách lớp sau khi chấm
+alter proc rl_getDSKhoaCham
+@ky varchar(3),
+@khoa varchar(2),
+@makhoa varchar(5)
+as
+begin
+	select pd.MA_SINH_VIEN, HO_LOT+' '+TEN as HOTEN, hs.LOP, NGAY_SINH, T5TTKy, LTT5TTKy, 
 	TongKhoa, T12, T13, TBD4, DIEMD7, DIEMF
 	from RL_PhieuDiem pd inner join D_HO_SO_SINH_VIEN hs on pd.Ma_SInh_Vien=hs.MA_SINH_VIEN
-	where Ky_Hoc=@ky and RIGHT(lop,2)= @khoa
+	inner join RL_DSLopCham pc on hs.LOP=pc.Lop
+	where pd.Ky_Hoc=@ky and RIGHT(hs.lop,2)= @khoa and MaKhoa = @makhoa
 	order by lop, ten, HO_LOT
 end
---exec rl_getDSKhoaCham '241','22'
+--exec rl_getDSKhoaCham '241','24','834'
 ----
 CREATE TABLE [dbo].[RL_DIEM_TH_KY_RENLUYEN](
 	[MA_SINH_VIEN] [nvarchar](12) NOT NULL,
@@ -352,12 +377,20 @@ CREATE TABLE [dbo].[RL_DIEM_TH_KY_RENLUYEN](
 	[TrangThai] [int] NULL
 )
 --- Lấy danh sách lớp
-create proc rl_getLop
+alter proc rl_getLop
 @ky varchar(3),
-@khoa varchar(2)
+@khoa varchar(2),
+@makhoa varchar(3)
 as
 begin
-	select * from RL_DSLopCham where Ky_Hoc=@ky and right(lop, 2)=@khoa
+	if(@makhoa = '1')
+	begin
+		select * from RL_DSLopCham where Ky_Hoc=@ky and right(lop, 2)=@khoa
+	end
+	else
+	begin
+		select * from RL_DSLopCham where Ky_Hoc=@ky and right(lop, 2)=@khoa and MaKhoa=@makhoa
+	end
 end
 --- lấy danh sách lớp kế hoạch
 alter proc rl_getLopKH
@@ -391,7 +424,7 @@ begin
 end
 --exec rl_get_kh_cham_sv '241183404109','241'
 ---Phòng công tác chính trị tổng hợp theo từng sinh viên
-create proc rl_ctct_TongHop
+alter proc rl_ctct_TongHop
 @masv varchar(12),
 @ky varchar(3)
 as
@@ -399,17 +432,17 @@ begin
 	update RL_PhieuDiem set CTCTT1 = LTT1, CTCTT11=LTT11, CTCTT2=LTT2, CTCTT21=LTT21, CTCTT22=LTT22, CTCTT23=LTT23, CTCTT24=LTT24, CTCTT25=LTT25,
 	CTCTT3=LTT3, CTCTT31=LTT31, CTCTT32=LTT32, CTCTT33=LTT33, CTCTT34=LTT34, CTCTT35=LTT35, CTCTT4=LTT4, CTCTT41=LTT41, CTCTT42=LTT42, CTCTT43=LTT43,
 	CTCTT44=LTT44, CTCTT5TTKy=TongKhoa
-	where Ma_SInh_Vien = @masv and Ky_Hoc=@ky and TrangThai=2
+	where Ma_SInh_Vien = @masv and Ky_Hoc=@ky and TrangThai=3
 	declare @xeploai int
 	set @xeploai = (select (case when DIEMKHOA >=90 then 1 when DIEMKHOA >=80 then 2 when DIEMKHOA >=70 then 3 when DIEMKHOA >=60 then 4
 	when DIEMKHOA >=50 then 5 when DIEMKHOA >=30 then 6 when DIEMKHOA >=20 then 7 else 8 end)
-	from RL_DIEM_TH_RENLUYEN where MA_SINH_VIEN=@masv and KY_HOC=@ky and TrangThai=2)
+	from RL_DIEM_TH_RENLUYEN where MA_SINH_VIEN=@masv and KY_HOC=@ky and TrangThai=3)
 	print @xeploai
-	update RL_DIEM_TH_RENLUYEN set DIEMCTCT=DIEMKHOA, XEP_LOAI =@xeploai where MA_SINH_VIEN=@masv and KY_HOC=@ky and TrangThai=2
+	update RL_DIEM_TH_RENLUYEN set DIEMCTCT=DIEMKHOA, XEP_LOAI =@xeploai where MA_SINH_VIEN=@masv and KY_HOC=@ky and TrangThai=3
 end
 --Phòng công tác chính trị tổng hợp theo lớp
 ---Khoa chấm điểm theo lớp
-create proc rl_ctct_tonghop_theo_khoa
+alter proc rl_ctct_tonghop_theo_khoa
 @khoa varchar(4),
 @Ky varchar(3)
 as
@@ -417,7 +450,7 @@ begin
 	DECLARE @MA_SINH_VIEN nvarchar(12)
 	DECLARE MSV_Cursorr CURSOR FOR select rl.Ma_Sinh_Vien From RL_PhieuDiem rl
 	inner join D_HO_SO_SINH_VIEN hs on rl.Ma_SInh_Vien = hs.MA_SINH_VIEN
-	where Ky_Hoc=@ky and RIGHT(hs.LOP,2)=@khoa and rl.TrangThai=2
+	where Ky_Hoc=@ky and RIGHT(hs.LOP,2)=@khoa and rl.TrangThai=3
 	----
 	OPEN MSV_Cursorr 
 	FETCH NEXT FROM MSV_Cursorr INTO @MA_SINH_VIEN
@@ -430,3 +463,53 @@ begin
 	DEALLOCATE MSV_Cursorr
 end
 --exec rl_ctct_tonghop_theo_khoa '24', '241'
+---lấy danh sách sau khi ctct đã chấm và xếp loại
+alter proc rl_getDsctctTongHop
+@ky varchar(3),
+@khoa varchar(2)
+as
+begin
+	select TRIM(Ho_lot)+' '+TRIM(Ten) as HOTEN, tenPhanloaiRL, * 
+	from RL_DIEM_TH_RENLUYEN rl
+	inner join CTSV_tblPhanLoaiDiemRenLuyen ct on rl.XEP_LOAI=ct.maPhanloaiRL
+	where KY_HOC=@ky and RIGHT(LOP,2)=@khoa
+	order by LOP, TEN, HO_LOT
+end
+--exec rl_getDsctctTongHop '241','24'
+---lấy danh sách sau khi ctct đã chấm và xếp loại
+alter proc rl_getDsctctTongHop_theokhao
+@ky varchar(3),
+@khoa varchar(2),
+@makhoa varchar(5)
+as
+begin
+	if(@makhoa=1)
+	begin
+		select TRIM(Ho_lot)+' '+TRIM(Ten) as HOTEN, tenPhanloaiRL,
+		(case RIGHT(rl.KY_HOC,1) when '1' then N'Kỳ I' else N'Kỳ II' end) as HK,
+		rl.Ky_Hoc, NamHoc, HO_LOT, TEN, TenKhoa, NGAY_SINH, rl.LOP, DIEMCTCT, NgayKhoa
+		from RL_DIEM_TH_RENLUYEN rl
+		inner join CTSV_tblPhanLoaiDiemRenLuyen ct on rl.XEP_LOAI=ct.maPhanloaiRL
+		inner join RL_DSLopCham lc on rl.LOP=lc.Lop
+		inner join S_DANH_MUC_KHOA k on lc.MaKhoa = k.MaKhoa
+		where rl.KY_HOC=@ky and RIGHT(rl.LOP,2)=@khoa and lc.Ky_Hoc=@ky
+		--group by TenKhoa, HO_LOT, TEN, rl.KY_HOC, NGAY_SINH, rl.LOP, DIEMCTCT, NgayKhoa, 
+		--tenPhanloaiRL, NamHoc
+		order by rl.LOP, TEN, HO_LOT
+	end
+	else
+	begin
+		select TRIM(Ho_lot)+' '+TRIM(Ten) as HOTEN, tenPhanloaiRL,
+		(case RIGHT(rl.KY_HOC,1) when '1' then N'Kỳ I' else N'Kỳ II' end) as HK,
+		rl.Ky_Hoc, NamHoc, HO_LOT, TEN, TenKhoa, NGAY_SINH, rl.LOP, DIEMCTCT, NgayKhoa
+		from RL_DIEM_TH_RENLUYEN rl
+		inner join CTSV_tblPhanLoaiDiemRenLuyen ct on rl.XEP_LOAI=ct.maPhanloaiRL
+		inner join RL_DSLopCham lc on rl.LOP=lc.Lop
+		inner join S_DANH_MUC_KHOA k on lc.MaKhoa = k.MaKhoa
+		where rl.KY_HOC=@ky and RIGHT(rl.LOP,2)=@khoa and lc.Ky_Hoc=@ky and lc.MaKhoa=@makhoa
+		--group by TenKhoa, HO_LOT, TEN, rl.KY_HOC, NGAY_SINH, rl.LOP, DIEMCTCT, NgayKhoa, 
+		--tenPhanloaiRL, NamHoc
+		order by rl.LOP, TEN, HO_LOT
+	end
+end
+--exec rl_getDsctctTongHop_theokhao '241','24','834'

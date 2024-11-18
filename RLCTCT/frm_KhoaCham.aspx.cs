@@ -9,13 +9,23 @@ using System.Web.UI.WebControls;
 public partial class RLCTCT_frm_KhoaCham : System.Web.UI.Page
 {
     RenLuyen rl = new RenLuyen();
+    string username = "";
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
-        {
-            getky();
-            getKhoaHoc();
-        }
+        //if (Session["USERNAME"] != null)
+        //{
+        //    username = Session["USERNAME"].ToString().Trim();
+            if (!IsPostBack)
+            {
+                getky();
+                getKhoaChuyenMon();
+                getKhoaHoc();
+            }
+        //}
+        //else
+        //{
+        //    Response.Redirect("~/logout.aspx");
+        //}
     }
     //lấy kỳ chấm điểm
     public void getky()
@@ -29,6 +39,17 @@ public partial class RLCTCT_frm_KhoaCham : System.Web.UI.Page
         drl_Ky.DataBind();
     }
     //lấy kỳ chấm điểm
+    public void getKhoaChuyenMon()
+    {
+        DataTable dtb = new DataTable();
+        dtb = rl.getKhoaChuyenMon();
+        drl_khoa.DataSource = dtb;
+        drl_khoa.DataTextField = "MaKhoa";
+        drl_khoa.DataTextField = "TenKhoa";
+        drl_khoa.DataValueField = "MaKhoa";
+        drl_khoa.DataBind();
+    }
+    //lấy kỳ chấm điểm
     public void getKhoaHoc()
     {
         DataTable dtb = new DataTable();
@@ -40,10 +61,10 @@ public partial class RLCTCT_frm_KhoaCham : System.Web.UI.Page
         drl_khoaHoc.DataBind();
     }
     //Hàm thực hiện lấy khoa danh sách khoa chấm
-    public void get_khoaCham(string ky, string khoa)
+    public void get_khoaCham(string ky, string khoa, string makhoa)
     {
         DataTable dt = new DataTable();
-        dt = rl.rl_getDSKhoaCham(ky, khoa);
+        dt = rl.rl_getDSKhoaCham(ky, khoa, makhoa);
         if (dt.Rows.Count > 0)
         {
             fld_dskhoacham.Visible = true;
@@ -59,14 +80,15 @@ public partial class RLCTCT_frm_KhoaCham : System.Web.UI.Page
     {
         string ky = drl_Ky.SelectedValue.ToString().Trim();
         string khoa = drl_khoaHoc.SelectedValue.ToString().Trim();
+        string makhoa = drl_khoa.SelectedValue.ToString().Trim();
         lbl_mess.Visible = true;
         lbl_mess.Text = "Kỳ chọn là " + ky + " Khóa chọn là " + khoa;
-        int kq = rl.rl_KhoaCham(khoa, ky);
+        int kq = rl.rl_KhoaCham(khoa, ky, makhoa);
         if (kq > 0)
         {
             lbl_mess.Visible = true;
             lbl_mess.Text = "Kỳ chọn là " + ky + " Khóa chọn là " + khoa + " Thực hiện chấm điểm thành công!";
-            get_khoaCham(ky, khoa);
+            get_khoaCham(ky, khoa, makhoa);
         }
         else
         {
@@ -74,5 +96,13 @@ public partial class RLCTCT_frm_KhoaCham : System.Web.UI.Page
             fld_dskhoacham.Visible = false;
             lbl_mess.Text = "Kỳ chọn là " + ky + " Khóa chọn là " + khoa + " Thực hiện chấm điểm thất bại! Hoặc khóa này chưa thực hiện chấm điểm";
         }
+    }
+
+    protected void btn_xemDS_Click(object sender, EventArgs e)
+    {
+        string ky = drl_Ky.SelectedValue.ToString().Trim();
+        string khoa = drl_khoaHoc.SelectedValue.ToString().Trim();
+        string makhoa = drl_khoa.SelectedValue.ToString().Trim();
+        get_khoaCham(ky, khoa, makhoa);
     }
 }

@@ -28,17 +28,33 @@
                         <asp:TextBox ID="txt_noidung" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="4"></asp:TextBox>
                     </div>          
                     <div class="form-group text-left">
-                        <asp:Label ID="Label1" Text="Ngày bắt đầu chấm" runat="server"></asp:Label>
+                        <asp:Label ID="Label1" Text="Ngày bắt đầu chấm đôi với sinh viên" runat="server"></asp:Label>
                         <asp:TextBox ID="txt_ngaybd" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
-                    </div>   
+                    </div>
                     <div class="form-group text-left">
-                        <asp:Label ID="Label2" Text="Ngày kết thúc" runat="server"></asp:Label>
+                        <asp:Label ID="Label8" Text="Ngày hoàn thành chấm đôi với sinh viên" runat="server"></asp:Label>
                         <asp:TextBox ID="txt_ngaykt" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
-                    </div>   
+                    </div> 
+                    <div class="form-group text-left">
+                        <asp:Label ID="Label2" Text="Ngày bắt đàu duyệt điểm đối với BCS và CVHT" runat="server"></asp:Label>
+                        <asp:TextBox ID="txt_ngaybd_cvht" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                    </div>
+                    <div class="form-group text-left">
+                        <asp:Label ID="Label5" Text="Ngày hoàn thành duyệt điểm đối với BCS và CVHT" runat="server"></asp:Label>
+                        <asp:TextBox ID="txt_ngaykt_cvht" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                    </div>
+                    <div class="form-group text-left">
+                        <asp:Label ID="Label6" Text="Ngày bắt đàu chấm điểm đối với khoa chuyên môn" runat="server"></asp:Label>
+                        <asp:TextBox ID="txt_ngaybd_khoa" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                    </div>
+                    <div class="form-group text-left">
+                        <asp:Label ID="Label7" Text="Ngày hoàn thành chấm điểm đối với khoa chuyên môn" runat="server"></asp:Label>
+                        <asp:TextBox ID="txt_ngaykt_khoa" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                    </div>
                     <div class="form-group text-center">
                         <asp:Label ID="lbl_thongbao" Text="" runat="server" Visible="false"></asp:Label><br />
                         <asp:Button ID="btn_luuKehoach" runat="server" Text="Lưu kế hoạch" CssClass="btn btn-secondary" OnClick="btn_luuKehoach_Click" />                        
-                    </div>     
+                    </div>
                 </fieldset>
             </div>
         </div>

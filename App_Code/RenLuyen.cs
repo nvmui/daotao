@@ -29,6 +29,20 @@ public class RenLuyen
         conn.Close();
         return dtb;
     }
+    //Lấy danh sách khoa chuyên môn
+    public DataTable getKhoaChuyenMon()
+    {
+        cmd = new SqlCommand("rl_getKhoaChuyenMon", conn);
+        cmd.CommandType = CommandType.StoredProcedure;
+        conn.Open();
+        cmd.ExecuteNonQuery();
+        da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataTable dtb = new DataTable();
+        da.Fill(dtb);
+        conn.Close();
+        return dtb;
+    }
     //Lấy danh sách khóa nhập học
     public DataTable rl_getKhoa()
     {
@@ -59,14 +73,16 @@ public class RenLuyen
         return dtb;
     }
     //Lấy lớp
-    public DataTable rl_getLop(string ky, int khoa)
+    public DataTable rl_getLop(string ky, int khoa, string makhoa)
     {
         cmd = new SqlCommand("rl_getLop", conn);
         cmd.CommandType = CommandType.StoredProcedure;
         cmd.Parameters.Add("@ky", SqlDbType.NVarChar, 3);
         cmd.Parameters.Add("@khoa", SqlDbType.Int);
+        cmd.Parameters.Add("@makhoa", SqlDbType.VarChar, 3);
         cmd.Parameters["@ky"].Value = ky;
         cmd.Parameters["@khoa"].Value = khoa;
+        cmd.Parameters["@makhoa"].Value = makhoa;
         conn.Open();
         da = new SqlDataAdapter();
         da.SelectCommand = cmd;
@@ -347,15 +363,17 @@ public class RenLuyen
         return kq;
     }
     //Hàm khoa thưc hiện chấm điểm mục 1.2 và 1.3
-    public int rl_KhoaCham(string khoa, string ky)
+    public int rl_KhoaCham(string khoa, string ky, string makhoa)
     {
         int kq = 0;
         cmd = new SqlCommand("rl_KhoaCham", conn);
         cmd.CommandType = CommandType.StoredProcedure;
         cmd.Parameters.Add("@khoa", SqlDbType.VarChar, 4);
         cmd.Parameters.Add("@Ky", SqlDbType.VarChar, 3);
+        cmd.Parameters.Add("@makhoa", SqlDbType.VarChar, 5);
         cmd.Parameters["@khoa"].Value = khoa;
         cmd.Parameters["@Ky"].Value = ky;
+        cmd.Parameters["@makhoa"].Value = makhoa;
         conn.Open();
         kq = cmd.ExecuteNonQuery();
         conn.Close();
@@ -376,10 +394,10 @@ public class RenLuyen
         conn.Close();
         return kq;
     }
-    //Lấy danh sách khoa chấm
-    public DataTable rl_getDSKhoaCham(string ky, string khoa)
+    //Lấy danh sách ctct chấm
+    public DataTable rl_getDSCTCT_Cham(string ky, string khoa)
     {
-        cmd = new SqlCommand("rl_getDSKhoaCham", conn);
+        cmd = new SqlCommand("rl_getDsctctTongHop", conn);
         cmd.CommandType = CommandType.StoredProcedure;
         cmd.Parameters.Add("@ky", SqlDbType.VarChar, 3);
         cmd.Parameters.Add("@khoa", SqlDbType.VarChar, 2);
@@ -393,8 +411,46 @@ public class RenLuyen
         conn.Close();
         return dtb;
     }
+    //Lấy danh sách ctct chấm
+    public DataTable rl_getDSCTCT_TongHop_TheoKhoa(string ky, string khoa, string makhoa)
+    {
+        cmd = new SqlCommand("rl_getDsctctTongHop_theokhao", conn);
+        cmd.CommandType = CommandType.StoredProcedure;
+        cmd.Parameters.Add("@ky", SqlDbType.VarChar, 3);
+        cmd.Parameters.Add("@khoa", SqlDbType.VarChar, 2);
+        cmd.Parameters.Add("@makhoa", SqlDbType.VarChar, 3);
+        cmd.Parameters["@ky"].Value = ky;
+        cmd.Parameters["@khoa"].Value = khoa;
+        cmd.Parameters["@makhoa"].Value = makhoa;
+        conn.Open();
+        da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataTable dtb = new DataTable();
+        da.Fill(dtb);
+        conn.Close();
+        return dtb;
+    }
+    //Lấy danh sách khoa chấm
+    public DataTable rl_getDSKhoaCham(string ky, string khoa, string makhoa)
+    {
+        cmd = new SqlCommand("rl_getDSKhoaCham", conn);
+        cmd.CommandType = CommandType.StoredProcedure;
+        cmd.Parameters.Add("@ky", SqlDbType.VarChar, 3);
+        cmd.Parameters.Add("@khoa", SqlDbType.VarChar, 2);
+        cmd.Parameters.Add("@makhoa", SqlDbType.VarChar, 5);
+        cmd.Parameters["@ky"].Value = ky;
+        cmd.Parameters["@khoa"].Value = khoa;
+        cmd.Parameters["@makhoa"].Value = makhoa;
+        conn.Open();
+        da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataTable dtb = new DataTable();
+        da.Fill(dtb);
+        conn.Close();
+        return dtb;
+    }
     //Hàm khởi tạo chấm điểm rèn luyện
-    public int rl_KhoiTaoCham(string kyhoc, string noidung, string khoa, string ngaybd, string ngaykt)
+    public int rl_KhoiTaoCham(string kyhoc, string noidung, string khoa, string ngaybd, string ngaykt, string ngaybdcvht, string ngayktcvht, string ngaybdkhoa, string ngayktkhoa)
     {
         int kq = 0;
         cmd = new SqlCommand("rl_KhoiTaoCham", conn);
@@ -404,11 +460,19 @@ public class RenLuyen
         cmd.Parameters.Add("@Khoa", SqlDbType.VarChar, 2);
         cmd.Parameters.Add("@NgayBatDau", SqlDbType.VarChar, 10);
         cmd.Parameters.Add("@NgayKhoa", SqlDbType.VarChar, 10);
+        cmd.Parameters.Add("@NgayBDCVHT", SqlDbType.VarChar, 10);
+        cmd.Parameters.Add("@NgayKTCVHT", SqlDbType.VarChar, 10);
+        cmd.Parameters.Add("@NgayBDKhoa", SqlDbType.VarChar, 10);
+        cmd.Parameters.Add("@NgayKTKhoa", SqlDbType.VarChar, 10);
         cmd.Parameters["@KY_HOC"].Value = kyhoc;
         cmd.Parameters["@NOIDUNGDG"].Value = noidung;
         cmd.Parameters["@Khoa"].Value = khoa;
         cmd.Parameters["@NgayBatDau"].Value = ngaybd;
         cmd.Parameters["@NgayKhoa"].Value = ngaykt;
+        cmd.Parameters["@NgayBDCVHT"].Value = ngaybdcvht;
+        cmd.Parameters["@NgayKTCVHT"].Value = ngayktcvht;
+        cmd.Parameters["@NgayBDKhoa"].Value = ngaybdkhoa;
+        cmd.Parameters["@NgayKTKhoa"].Value = ngayktkhoa;
         conn.Open();
         kq = cmd.ExecuteNonQuery();
         conn.Close();

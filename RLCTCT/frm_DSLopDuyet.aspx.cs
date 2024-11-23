@@ -20,7 +20,7 @@ public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
             if (!IsPostBack)
             {
                 //username = "221183404140";
-                getky();
+                //getky();
                 get_dsDuyetLop();
                 id = int.Parse(lbl_id.Text.ToString().Trim());
             if (id == 0)
@@ -112,7 +112,7 @@ public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
                 t43.Text = dtb.Rows[0]["T43"].ToString();
                 t44.Text = dtb.Rows[0]["T44"].ToString();
                 txt_tong.Text = dtb.Rows[0]["T5TTKy"].ToString();
-                ////
+                ////Lớp duyệt
                 t1lt.Text = dtb.Rows[0]["T1"].ToString();
                 t11lt.Text = dtb.Rows[0]["T11"].ToString();
                 t2lt.Text = dtb.Rows[0]["T2"].ToString();
@@ -159,8 +159,10 @@ public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
         //username = "221183404104";
         FieldTools.Visible = true;
         fldset_cham_rl.Visible = false;
-        string noidung_x = drl_Ky.SelectedItem.Text.ToString().Trim();
-        string ky = drl_Ky.SelectedValue.ToString().Trim();
+        //string noidung_x = drl_Ky.SelectedItem.Text.ToString().Trim();
+        string noidung_x =lbl_tenky.Text.ToString().Trim();
+        //string ky = drl_Ky.SelectedValue.ToString().Trim();
+        string ky = lbl_ky_.Text.ToString().Trim();
         string masv = lblmasv.Text.ToString().Trim();
         int t_1_1 = 0, t_2_2 = 0, t_3_3 = 0, t_4_4 = 0, tong = 0;
         string t_1 = t1lt.Text.ToString().Trim();
@@ -232,6 +234,8 @@ public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
         if (dt.Rows.Count > 0)
         {
             lbl_lop.Text = dt.Rows[0]["LOP"].ToString().Trim();
+            lbl_ky_.Text = dt.Rows[0]["KY_HOC"].ToString().Trim();
+            lbl_tenky.Text = dt.Rows[0]["TEN_KY_HOC"].ToString().Trim();
             grv_dsLop.DataSource = dt;
             grv_dsLop.DataBind();
             for (int i = 0; i < dt.Rows.Count; i++)
@@ -252,6 +256,7 @@ public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
                 else if (diem == 3)
                 {
                     (grv_dsLop.Rows[i].FindControl("lbl_trangthai") as Label).Text = "Đã khóa";
+                    btnNopKL.Enabled = false;
                 }
             }
         }
@@ -260,9 +265,9 @@ public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
     {
         if (e.CommandName == "Duyet")
         {
-            int dong = Convert.ToInt32(e.CommandArgument.ToString());
-            id = int.Parse(grv_dsLopDuyet.Rows[dong].Cells[1].Text.ToString());
-            //lbl_id.Text = id.ToString();
+            int selected_index = int.Parse(e.CommandArgument.ToString());
+            id = int.Parse(grv_dsLopDuyet.Rows[selected_index].Cells[1].Text.ToString());
+            lbl_id.Text = id.ToString();
             laydslopTongHop(id);
             flds_xembangTonghop.Visible = false;
         }
@@ -274,7 +279,8 @@ public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
         {
             int dong = int.Parse(e.CommandArgument.ToString());
             string masv = grv_dsLop.Rows[dong].Cells[1].Text.ToString();
-            string ky = drl_Ky.SelectedValue.ToString().Trim();            
+            //string ky = drl_Ky.SelectedValue.ToString().Trim();
+            string ky = lbl_ky_.Text.ToString().Trim();
             int kt = get_Phieu(masv, ky);
             if (kt == 1 || kt == 2)
             {
@@ -323,5 +329,12 @@ public partial class RLCTCT_frm_DSLopDuyet : System.Web.UI.Page
             lbl_cham.Visible = true;
             lbl_cham.Text = "Lớp này chưa được duyệt!";
         }
+    }
+
+    protected void btn_thoat_Click(object sender, EventArgs e)
+    {
+        fldset_cham_rl.Visible = false;
+        FieldTools.Visible = true;
+        fld_dslop.Visible = true;
     }
 }

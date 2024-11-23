@@ -8,6 +8,10 @@
             color: #FF0000;
             text-align: center;
         }
+        .auto-style1 {
+            text-align: center;
+            height: 38px;
+        }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
@@ -136,8 +140,8 @@
                     <table border="1px" align="center" style="width: 100%">
                         <tr>
                             <td colspan="10">
-                                <h4 class="text-center">DANH SÁCH DUYỆT ĐIỂM RÈN LUYỆN LỚP <asp:Label ID="lbl_lop" runat="server"></asp:Label> </h4>      
-                                <asp:Label ID="lbl_id" runat="server" Visible="false"></asp:Label>                          
+                                <h4 class="text-center">DANH SÁCH DUYỆT ĐIỂM RÈN LUYỆN LỚP <asp:Label ID="lbl_lop" runat="server"></asp:Label> &nbsp;KỲ <asp:Label ID="lbl_ky_" runat="server"></asp:Label></h4>      
+                                <asp:Label ID="lbl_id" runat="server" Visible="true"></asp:Label>                          
                             </td>
                         </tr>
                         <tr>
@@ -262,14 +266,16 @@
                                 <tr>
                                     <td colspan="2" class="text-right">
                                         <asp:Button ID="btnNopKL" runat="server" Width="150px" Text="Lưu và Nộp phiếu" CssClass="btn btn-primary" OnClick="btnNopKL_Click" ToolTip="Bấm vào để nộp phiếu đánh giá, khi đã nộp sẽ không được sửa." OnClientClick="javascript: return edit_confirm();" />
+                                        <asp:Button ID="btn_thoat" runat="server" Width="150px" Text="Thoát" CssClass="btn btn-primary" OnClick="btn_thoat_Click" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="text-right">
-                                        <asp:Label ID="lbl_ky" Text="Chọn kỳ đánh giá" runat="server" Font-Bold="True"></asp:Label>
+                                        <asp:Label ID="lbl_ky" Text="Chọn kỳ đánh giá" Visible="false" runat="server" Font-Bold="True"></asp:Label>
+                                        <asp:Label ID="lbl_tenky" Text="" runat="server" Visible="true" Font-Bold="True"></asp:Label>
                                     </td>
                                     <td>
-                                        <asp:DropDownList ID="drl_Ky" runat="server" Width="200px" AutoPostBack="True"></asp:DropDownList>
+                                        <asp:DropDownList ID="drl_Ky" Visible="false" runat="server" Width="200px" AutoPostBack="True"></asp:DropDownList>
                                     </td>
                                 </tr>
                                 <tr>
@@ -278,21 +284,23 @@
                                         &nbsp;</td>
                                 </tr>
                                 <tr>
-                                    <td>
+                                    <td style="text-align: left">
                                         <asp:Label ID="hoten" runat="server" Text=""></asp:Label></td>
-                                    <td>
+                                    <td style="text-align: left">
                                         <asp:Label ID="ngaysinh" runat="server" Text=""></asp:Label></td>
                                 </tr>
                                 <tr>
-                                    <td>
+                                    <td style="text-align: left">
                                         <asp:Label ID="Lop" runat="server" Text=""></asp:Label></td>
-                                    <td>
+                                    <td style="text-align: left">
                                         <asp:Label ID="Noisinh" runat="server" Text=""></asp:Label></td>
                                 </tr>
                                 <tr>
-                                    <td>
+                                    <td style="text-align: left">
                                         <asp:Label ID="lblmasv" Visible="false" runat="server" Text=""></asp:Label></td>
-                                    <td></td>
+                                    <td>
+                                        <asp:Label ID="lbl_trangthai" Visible="false" runat="server" Text=""></asp:Label></td>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td colspan="2">
@@ -309,11 +317,14 @@
                                                     <td width="10%" class="text-center">
                                                         <h6><strong>Cá nhân tự chấm</strong></h6>
                                                     </td>
+                                                    <td width="10%" class="text-center">
+                                                        <h6><strong>Thông qua lớp</strong></h6>
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td width="3%">1.</td>
                                                     <td width="80%">
-                                                        <h5>Đánh giá ý thức, thái độ và kết quả học tập <em>(tính theo tháng điểm 4)</em></h5>
+                                                        <h5 class="text-justify">Đánh giá ý thức, thái độ và kết quả học tập <em>(tính theo tháng điểm 4)</em></h5>
                                                     </td>
                                                     <td width="10%" class="text-center">
                                                         <h5>30</h5>
@@ -328,7 +339,7 @@
                                                 <tr style="text-align: left">
                                                     <td>1.1.</td>
                                                     <td>
-                                                        <h5>Đi học đúng giờ, đầy đủ <strong>(Vắng 1 buổi trừ 1 điểm, trừ trường hợp có phép đúng quy định)</strong></h5>
+                                                        <h5 class="text-justify">Đi học đúng giờ, đầy đủ <strong>(Vắng 1 buổi trừ 1 điểm, trừ trường hợp có phép đúng quy định)</strong></h5>
                                                     </td>
                                                     <td class="text-center">
                                                         <h5>10</h5>
@@ -342,7 +353,7 @@
                                                 </tr>
                                                 <tr style="text-align: left">
                                                     <td>1.2.</td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5 class="justify-content-center">Điểm về kết quả học tập <em>(Tính điểm lần 1)</em> <strong>(Khoa chấm)</strong></h5>
                                                     </td>
                                                     <td class="text-center">
@@ -354,7 +365,7 @@
                                                 </tr>
                                                 <tr style="text-align: left">
                                                     <td></td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5 class="justify-content-center">Điểm TBCHT từ 3.6 đến 4.0</h5>
                                                     </td>
                                                     <td class="text-center">
@@ -366,7 +377,7 @@
                                                 </tr>
                                                 <tr style="text-align: left">
                                                     <td></td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5 class="justify-content-center">Điểm TBCHT từ 3.2 đến 3.59</h5>
                                                     </td>
                                                     <td class="text-center">
@@ -378,7 +389,7 @@
                                                 </tr>
                                                 <tr style="text-align: left">
                                                     <td></td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5 class="justify-content-center">Điểm TBCHT từ 2.5 đến 3.19</h5>
                                                     </td>
                                                     <td class="text-center">
@@ -390,7 +401,7 @@
                                                 </tr>
                                                 <tr style="text-align: left">
                                                     <td></td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5 class="justify-content-center">Điểm TBCHT từ 2.0 đến 2.49</h5>
                                                     </td>
                                                     <td class="text-center">
@@ -402,7 +413,7 @@
                                                 </tr>
                                                 <tr style="text-align: left">
                                                     <td></td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5 class="justify-content-center">Điểm TBCHT từ 2.0</h5>
                                                     </td>
                                                     <td class="text-center">
@@ -415,7 +426,7 @@
                                                 <tr>
                                                     <td>1.3</td>
                                                     <td>
-                                                        <h5>Điểm thưởng về học tập <strong>(Khoa chấm)</strong></h5>
+                                                        <h5 class="text-justify">Điểm thưởng về học tập <strong>(Khoa chấm)</strong></h5>
                                                     </td>
                                                     <td class="text-center">
                                                         <h5>5</h5>
@@ -427,7 +438,7 @@
                                                 <tr>
                                                     <td></td>
                                                     <td>
-                                                        <h5>Không có học phần nào bị điểm C trở xuống</h5>
+                                                        <h5 class="text-justify">Không có học phần nào bị điểm C trở xuống</h5>
                                                     </td>
                                                     <td class="text-center">
                                                         <h5>5</h5>
@@ -438,7 +449,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td></td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5>Không có học phần nào bị điểm F</h5>
                                                     </td>
                                                     <td class="text-center">
@@ -450,7 +461,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>2.</td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5>Đánh giá về ý thức chấp hành pháp luật và nội quy, quy chế của nhà trường</h5>
                                                     </td>
                                                     <td class="text-center">
@@ -465,7 +476,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>2.1</td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5>Không vi phạm quy chế thi <strong><em>(Vi phạm không có điểm)</em></strong></h5>
                                                     </td>
                                                     <td class="text-center">
@@ -480,7 +491,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>2.2</td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5>Thực hiện nếp sống văn hóa do nhà trường quy định (Không dùng những lời lẽ thiếu văn hóa, không hút thuốc lá trong trường, giữ gìn vệ sinh tốt, để xe đúng nơi quy định...)</h5>
                                                     </td>
                                                     <td class="text-center">
@@ -495,7 +506,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>2.3</td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5>Thực hiện đúng quy chế khác của nhà trường</h5>
                                                     </td>
                                                     <td class="text-center">
@@ -510,7 +521,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>2.4</td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5>Chấp hành đúng chủ trương pháp luật của nhà nước</h5>
                                                     </td>
                                                     <td class="text-center">
@@ -525,7 +536,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>2.5</td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5>Đóng học phí, BHYT và đoàn phí đầy đủ, đúng thời gian quy định <strong><em>(Vi phạm 1 trong 3 nội dung này trừ 5 điểm)</em></strong></h5>
                                                     </td>
                                                     <td class="text-center">
@@ -540,7 +551,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>3.</td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5><strong>Đánh giá về ý thức tham gia các hoạt động chính trị - xã hội, văn hóa, văn nghệ, thể thao, phòng chống tội phạm và các tệ nạn xã hội, bạo lực học đường</strong></h5>
                                                     </td>
                                                     <td class="text-center">
@@ -555,7 +566,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>3.1</td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5>Tham gia đầy đủ và đạt kết quả cao tuần lễ "Sinh hoạt công dân", các buổi sinh hoạt chính trị, thời sự<strong><em> (Vắng 1 buổi không lý do trừ 1 điểm)</em></strong></h5>
                                                     </td>
                                                     <td class="text-center">
@@ -570,7 +581,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>3.2</td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5>Tham gia đầy đủ các buổi sinh hoạt lớp<strong><em> (Vắng 1 buổi không lý do trừ 1 điểm)</em></strong></h5>
                                                     </td>
                                                     <td class="text-center">
@@ -600,7 +611,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>3.4</td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5>Tham gia đấu tranh phòng chống tệ nạn xã hội như: Mại dâm, ma túy, gây mất an ninh trật tự…</h5>
                                                     </td>
                                                     <td class="text-center">
@@ -615,7 +626,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>3.5</td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5>Tham gia đóng góp cho phong trào HSSV tình nguyện.</h5>
                                                     </td>
                                                     <td class="text-center">
@@ -630,7 +641,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>4.</td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5><strong>Đánh giá về ý thức và kết quả khi tham gia công tác cán bộ lớp, các đoàn thể, tổ chức trong nhà trường hoặc có thành tích xuất sắc trong học tập, rèn luyện được cơ quan có thẩm quyền khen thưởng</strong> </h5>
                                                     </td>
                                                     <td class="text-center">
@@ -645,7 +656,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>4.1</td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5>BCS Lớp, BCH chi đoàn điều hành tham gia đủ các hoạt động của nhà trường, Đoàn, Hội, ...</h5>
                                                     </td>
                                                     <td class="text-center">
@@ -660,7 +671,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>4.2</td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5>Có hành động tuyên truyền, vận động, lôi cuốn người khác tham gia công việc chung của trường, khoa, lớp, công tác Đoàn, Hội, ...</h5>
                                                     </td>
                                                     <td class="text-center">
@@ -675,7 +686,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>4.3</td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5>Có thành tích trong nghiên cứu khoa học, tham gia các cuộc thi, sáng kiến cải tiến kỹ thuật được Nhà trường hoặc các cơ quan có thẩm quyền công nhận.</h5>
                                                     </td>
                                                     <td class="text-center">
@@ -690,7 +701,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>4.4</td>
-                                                    <td>
+                                                    <td class="text-justify">
                                                         <h5>Tham gia các hoạt động nhân đạo, từ thiện; Có tinh thần cưu mang giúp đỡ người gặp khó khăn; Có hành vi giúp đỡ bạn bè trong học tập, trong cuộc sống được tập thể công nhận.</h5>
                                                     </td>
                                                     <td class="text-center">
@@ -732,7 +743,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2" class="text-center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                            
+                                    <td colspan="2" class="auto-style1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                            
                                 <script lang="javascript">
                                     function edit_confirm() {
                                         var result = confirm("Nộp phiếu chấm điểm rèn luyện thành công!");

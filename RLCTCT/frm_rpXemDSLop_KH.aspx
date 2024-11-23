@@ -9,7 +9,7 @@
                 <h4>BÁO CÁO TỔNG HỢP</h4>
                 <div>
                     <asp:Label ID="Label3" Text="Chọn kỳ chấm" runat="server"></asp:Label>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <asp:DropDownList ID="drl_Ky" runat="server" Width="250px" AutoPostBack="True"></asp:DropDownList>
                 </div>                  
                 <div>
@@ -26,7 +26,7 @@
                 <div>
                     <br />
                     <table align="center">
-                        <tr>
+                        <tr class="text-left">
                             <td>
                                 <asp:RadioButton ID="rd_theoKhoacm" runat="server" Text="Danh sách theo khoa" GroupName="khoa" Font-Bold="True" Checked="True" AutoPostBack="True" OnCheckedChanged="rd_theoKhoacm_CheckedChanged" />
                             </td>
@@ -35,7 +35,7 @@
                             </td>
                         </tr>
                         
-                        <tr>
+                        <tr class="text-left">
                             <td>
                                 <asp:RadioButton ID="rd_theo_lop" runat="server" Text="Danh sách lớp" GroupName="khoa" Font-Bold="True" OnCheckedChanged="rd_theo_lop_CheckedChanged" AutoPostBack="True" />
                             </td>
@@ -43,7 +43,7 @@
                                 <asp:DropDownList ID="drl_lop" runat="server" Width="250px" AutoPostBack="True" Visible="False"></asp:DropDownList>
                             </td>
                         </tr>
-                        <tr>
+                        <tr class="text-left">
                             <td class="auto-style1">
                                 <asp:RadioButton ID="rd_theo_khoa" runat="server" Text="Xem kế hoạch" GroupName="khoa" Font-Bold="True" AutoPostBack="True" OnCheckedChanged="rd_theo_khoa_CheckedChanged" />
                             </td>
@@ -52,7 +52,7 @@
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             </td>
                         </tr>
-                        <tr>
+                        <tr class="text-left">
                             <td>
                                 <asp:RadioButton ID="rd_ToanKhoa" runat="server" Text="Danh sách toàn khóa học" GroupName="khoa" Font-Bold="True" Checked="True" AutoPostBack="True" Visible="false" />
                             </td>

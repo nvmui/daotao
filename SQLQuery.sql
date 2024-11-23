@@ -126,9 +126,10 @@ alter proc rl_get_DIEM_TH_RENLUYEN
 as
 begin
 	select TRIM(HO_LOT)+' '+TRIM(TEN) as Hoten, * from RL_DIEM_TH_RENLUYEN rl
-	where MA_SINH_VIEN = @masv
+	inner join CTSV_tblPhanLoaiDiemRenLuyen ctl on rl.XEP_LOAI = ctl.maPhanloaiRL
+	where MA_SINH_VIEN = @masv order by KY_HOC desc
 end
-
+--exec rl_get_DIEM_TH_RENLUYEN '221183404102'
 ALTER proc rl_insert_DIEM_TH_RENLUYEN
 @MA_SINH_VIEN varchar(12),
 @HOTEN nvarchar(100),
@@ -170,9 +171,9 @@ begin
 	SELECT id, Lop, Ky_Hoc, NamHoc, DotDanhGia, NgayBatDau, NgayKhoa,TrangThai,
 	(case TrangThai when 0 then N'Chưa duyệt' when 1 then N'Đã duyệt' else N'Đã khóa' end) as TrangThais , NguoiDuyet
 	FROM   RL_DSLopCham
-	WHERE NguoiDuyet = @masv
+	WHERE NguoiDuyet = @masv order by Ky_Hoc desc
 end
-
+--exec rl_getCanBoLopCham '8340109'
 ---Khởi tạo danh sách sinh viên tổng hợp vào bảng RL_DIEM_TH_RENLUYEN
 alter proc rl_KhoiTaoCham
 @KY_HOC varchar(3),
@@ -186,8 +187,9 @@ alter proc rl_KhoiTaoCham
 @NgayKTKhoa varchar(10)
 as
 begin
-	declare @tennamhoc nvarchar(200)
+	declare @tennamhoc nvarchar(200), @sosv int
 	set @tennamhoc = (select TEN_KY_HOC from S_KY_HOC where MA_KY_HOC=@KY_HOC)
+
 	--khơi tạo bảng RL_DIEM_TH_RENLUYEN
 	INSERT INTO RL_DIEM_TH_RENLUYEN(MA_SINH_VIEN,HO_LOT, TEN,NGAY_SINH,LOP,KY_HOC,NOIDUNGDG,NGAYTAO)
 	select MA_SINH_VIEN, HO_LOT, TEN, NGAY_SINH, LOP, @KY_HOC, @tennamhoc,GETDATE() from D_HO_SO_SINH_VIEN 
@@ -206,6 +208,7 @@ end
 
 ALTER proc [dbo].[rl_GetLopCham]
 @id int
+--@ky varchar(3)
 as
 begin
 	declare @lop varchar(20), @kyhoc varchar(3)
@@ -220,7 +223,7 @@ begin
 	where rl.LOP = @lop and KY_HOC= @kyhoc order by TEN, HO_LOT
 end
 
---exec rl_GetLopCham 94
+--exec rl_GetLopCham 165
 
 ---Khoa chấm
 alter proc check_DiemHT
@@ -268,7 +271,7 @@ begin
 	end
 	else if(CONVERT(float, @diemtb)<=2)
 	begin
-		set @t124 = 7
+		set @t125 = 7
 		set @t12 = 7
 	end
 	if(@duoi7=0)
@@ -276,17 +279,12 @@ begin
 		set @t13 = 5
 		set @t131 = 5
 	end
-	else if(@duoi7>0)
-	begin
-		set @t13 = 0
-		set @t131 = 0
-	end
-	if(@diemF=0)
+	else if(@duoi7 > 0 and @diemF = 0)
 	begin
 		set @t13 = 3
-		set @t132 = 3
+		set @t131 = 3
 	end
-	else if(@diemF>0)
+	else
 	begin
 		set @t13 = 0
 		set @t132 = 0
@@ -301,7 +299,7 @@ begin
 	print @t12
 	print @t13
 end
---exec check_DiemHT '221183404104','241'
+--exec check_DiemHT '221183404102','221'
 ---Khoa chấm điểm theo lớp
 alter proc rl_KhoaCham
 @khoa varchar(4),
@@ -360,10 +358,10 @@ begin
 	TongKhoa, T12, T13, TBD4, DIEMD7, DIEMF
 	from RL_PhieuDiem pd inner join D_HO_SO_SINH_VIEN hs on pd.Ma_SInh_Vien=hs.MA_SINH_VIEN
 	inner join RL_DSLopCham pc on hs.LOP=pc.Lop
-	where pd.Ky_Hoc=@ky and RIGHT(hs.lop,2)= @khoa and MaKhoa = @makhoa
+	where pd.Ky_Hoc=@ky and RIGHT(hs.lop,2)= @khoa and MaKhoa = @makhoa and pc.Ky_Hoc=@ky
 	order by lop, ten, HO_LOT
 end
---exec rl_getDSKhoaCham '241','24','834'
+--exec rl_getDSKhoaCham '241','22','834'
 ----
 CREATE TABLE [dbo].[RL_DIEM_TH_KY_RENLUYEN](
 	[MA_SINH_VIEN] [nvarchar](12) NOT NULL,
@@ -422,7 +420,7 @@ begin
 	set @lop = (select LOP from D_HO_SO_SINH_VIEN where MA_SINH_VIEN=@masv)
 	select * from RL_DSLopCham where Ky_Hoc= @ky and Lop=@lop
 end
---exec rl_get_kh_cham_sv '241183404109','241'
+--exec rl_get_kh_cham_sv '221183404102','231'
 ---Phòng công tác chính trị tổng hợp theo từng sinh viên
 alter proc rl_ctct_TongHop
 @masv varchar(12),
@@ -439,6 +437,52 @@ begin
 	from RL_DIEM_TH_RENLUYEN where MA_SINH_VIEN=@masv and KY_HOC=@ky and TrangThai=3)
 	print @xeploai
 	update RL_DIEM_TH_RENLUYEN set DIEMCTCT=DIEMKHOA, XEP_LOAI =@xeploai where MA_SINH_VIEN=@masv and KY_HOC=@ky and TrangThai=3
+	declare @dem int
+	set @dem = (select COUNT(MA_SINH_VIEN) from RL_DIEM_TH_KY_RENLUYEN where MA_SINH_VIEN=@masv)
+	if(@dem = 0)
+	begin
+		insert into RL_DIEM_TH_KY_RENLUYEN(MA_SINH_VIEN) values(@masv)
+	end
+	----
+	declare @socot tinyint
+	select @socot = null
+	declare @diem1 varchar(4)
+	declare @diem2 varchar(4)
+	declare @diem3 varchar(4)
+	declare @diem4 varchar(4)
+	declare @diem5 varchar(4)
+	declare @diem6 varchar(4)
+	declare @diemctct varchar(4)
+	select @diemctct = DIEMCTCT from RL_DIEM_TH_RENLUYEN where MA_SINH_VIEN=@masv and KY_HOC=@ky
+	select @diem1 = DiemK1, @diem2 = DiemK2, @diem3 = DiemKy3, @diem4 = DiemKy4, @diem5 = DiemKy5, @diem6 = DiemKy6
+		FROM         RL_DIEM_TH_KY_RENLUYEN with (NoLock)
+		WHERE     (MA_SINH_VIEN = @masv)
+
+	if((@diem1 is null) or (@diem1='')) and ((@diem2 is null) or (@diem2='')) and ((@diem3 is null)  or (@diem3 = '')) and ((@diem4 is null)  or (@diem4 = '')) and ((@diem5 is null)  or (@diem5 = ''))
+	begin
+		update RL_DIEM_TH_KY_RENLUYEN set DiemK1 = @diemctct, KY1=@ky where MA_SINH_VIEN=@masv
+	end
+	else if((@diem1 <> '')) and ((@diem2 is null) or (@diem2='')) and ((@diem3 is null)  or (@diem3 = '')) and ((@diem4 is null)  or (@diem4 = '')) and ((@diem5 is null)  or (@diem5 = ''))
+	begin
+		update RL_DIEM_TH_KY_RENLUYEN set DiemK2 = @diemctct, KY2=@ky where MA_SINH_VIEN=@masv
+	end
+	else if((@diem1 <> '')) and ((@diem2 <> '')) and ((@diem3 is null)  or (@diem3 = '')) and ((@diem4 is null)  or (@diem4 = '')) and ((@diem5 is null)  or (@diem5 = ''))
+	begin
+		update RL_DIEM_TH_KY_RENLUYEN set DiemKy3 = @diemctct, KY3=@ky where MA_SINH_VIEN=@masv
+	end
+	else if((@diem1 <> '')) and ((@diem2 <> '')) and ((@diem3 <> '')) and ((@diem4 is null)  or (@diem4 = '')) and ((@diem5 is null)  or (@diem5 = ''))
+	begin
+		update RL_DIEM_TH_KY_RENLUYEN set DiemKy4 = @diemctct, KY4=@ky where MA_SINH_VIEN=@masv
+	end
+	else if((@diem1 <> '')) and ((@diem2 <> '')) and ((@diem3 <> '')) and ((@diem4 <> '')) and ((@diem5 is null)  or (@diem5 = ''))
+	begin
+		update RL_DIEM_TH_KY_RENLUYEN set DiemKy5 = @diemctct, KY5=@ky where MA_SINH_VIEN=@masv
+	end
+	else if((@diem1 <> '')) and ((@diem2 <> '')) and ((@diem3 <> '')) and ((@diem4 <> '')) and ((@diem5 = '')) and ((@diem6 is null)  or (@diem6 = ''))
+	begin
+		update RL_DIEM_TH_KY_RENLUYEN set DiemKy6 = @diemctct, KY6=@ky where MA_SINH_VIEN=@masv
+	end
+
 end
 --Phòng công tác chính trị tổng hợp theo lớp
 ---Khoa chấm điểm theo lớp
@@ -462,7 +506,7 @@ begin
 	CLOSE MSV_Cursorr
 	DEALLOCATE MSV_Cursorr
 end
---exec rl_ctct_tonghop_theo_khoa '24', '241'
+--exec rl_ctct_tonghop_theo_khoa '22', '241'
 ---lấy danh sách sau khi ctct đã chấm và xếp loại
 alter proc rl_getDsctctTongHop
 @ky varchar(3),

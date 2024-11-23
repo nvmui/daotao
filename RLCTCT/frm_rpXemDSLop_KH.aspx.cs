@@ -13,9 +13,9 @@ public partial class RLCTCT_frm_rpXemDSLop_KH : System.Web.UI.Page
     string username = "";
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["USERNAME"] != null)
-        {
-            username = Session["USERNAME"].ToString().Trim();
+        //if (Session["USERNAME"] != null)
+        //{
+        //    username = Session["USERNAME"].ToString().Trim();
             if (!IsPostBack)
             {
                 getky();
@@ -26,11 +26,11 @@ public partial class RLCTCT_frm_rpXemDSLop_KH : System.Web.UI.Page
                 string makhoa = drl_khoacm.SelectedValue.ToString().Trim();
                 getLop(ky, khoa, makhoa);
             }
-        }
-        else
-        {
-            Response.Redirect("~/logout.aspx");
-        }
+        //}
+        //else
+        //{
+        //    Response.Redirect("~/logout.aspx");
+        //}
     }
     //lấy kỳ chấm điểm
     public void getky()

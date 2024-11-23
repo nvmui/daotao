@@ -11,23 +11,23 @@ public partial class RLCTCT_frm_ChamDiemRL : System.Web.UI.Page
 {
     RenLuyen rl = new RenLuyen();
     //string username = "";
-    string username = "241183404109";
+    string username = "221183404102";
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["USERNAME"] != null)
-        {
-            username = Session["USERNAME"].ToString().Trim();
+        //if (Session["USERNAME"] != null)
+        //{
+        //    username = Session["USERNAME"].ToString().Trim();
             if (!IsPostBack)
             {
                 getky();
                 //rl_getDiemTH();
                 getKehoachCham();
             }
-        }
-        else
-        {
-            Response.Redirect("~/logout.aspx");
-        }
+        //}
+        //else
+        //{
+        //    Response.Redirect("~/logout.aspx");
+        //}
     }
     //lấy kỳ chấm điểm
     public void getky()
@@ -55,8 +55,7 @@ public partial class RLCTCT_frm_ChamDiemRL : System.Web.UI.Page
             dtb = rl.rl_get_kh_cham_sv(username, ky);
             if (dtb.Rows.Count > 0)
             {
-
-                rl_getDiemTH();
+                rl_getDiemTH(username);
                 fld_diem_dg.Visible = true;
                 lbl_cham.Visible = false;
                 lbl_thongbaocham.Text = dtb.Rows[0]["DotDanhGia"].ToString().Trim();
@@ -70,19 +69,19 @@ public partial class RLCTCT_frm_ChamDiemRL : System.Web.UI.Page
         }
     }
     //Lấy điểm tổng hợp
-    public void rl_getDiemTH()
+    public void rl_getDiemTH(string user)
     {
         //username = "221183404102";
-        if (username.Length < 12)
+        if (user.Length < 12)
         {
             fld_diem_dg.Visible = false;
             lbl_cham.Visible = true;
-            lbl_cham.Text = "Kỳ này chưa có kế hoạch chấm điểm rèn luyện hoặc bạn không có quyền vào xem.";
+            lbl_cham.Text = "Hiện này chưa có kế hoạch chấm điểm rèn luyện hoặc bạn không có quyền vào xem.";
         }
         else
         {
             DataTable dtb = new DataTable();
-            dtb = rl.rl_get_DIEM_TH_RENLUYEN(username);
+            dtb = rl.rl_get_DIEM_TH_RENLUYEN(user);
             if (dtb.Rows.Count > 0)
             {
                 grv_diemth.DataSource = dtb;
@@ -94,7 +93,7 @@ public partial class RLCTCT_frm_ChamDiemRL : System.Web.UI.Page
             {
                 fld_diem_dg.Visible = false;
                 lbl_cham.Visible = true;
-                lbl_cham.Text = "Kỳ này chưa có kế hoạch chấm điểm rèn luyện hoặc bạn không có quyền vào xem.";
+                lbl_cham.Text = "Chưa có kế hoạch chấm điểm rèn luyện hoặc bạn không có quyền vào xem.";
             }
         }
     }
@@ -102,9 +101,13 @@ public partial class RLCTCT_frm_ChamDiemRL : System.Web.UI.Page
     {
         //username = "221183404102";
         FieldTools.Visible = true;
-        fldset_cham_rl.Visible = false;        
-        string noidung_x = drl_Ky.SelectedItem.Text.ToString().Trim();
-        string ky = drl_Ky.SelectedValue.ToString().Trim();
+        fldset_cham_rl.Visible = false;
+        //string noidung_x = drl_Ky.SelectedItem.Text.ToString().Trim();
+        string noidung_x = lbl_ky_dg.Text.ToString();
+        //string ky = drl_Ky.SelectedValue.ToString().Trim();
+        string ky = lbl_ma_ky.Text.ToString();
+        int diem = int.Parse(lbl_diemctct.Text.ToString());
+
         DataTable dt = new DataTable();
         dt = rl.rl_sinhvien(username);
         string masv = dt.Rows[0]["MA_SINH_VIEN"].ToString();
@@ -173,38 +176,13 @@ public partial class RLCTCT_frm_ChamDiemRL : System.Web.UI.Page
             if (kqth > 0)
             {
                 lbl_mess.Text = "Bạn đã nộp phiếu điêm thành công!";
-                rl_getDiemTH();
+                rl_getDiemTH(username);
             }
         }
-    }
-    protected void btn_cham_Click(object sender, EventArgs e)
-    {
-        //username = "221183404102";
-        string ky = drl_Ky.SelectedValue.ToString().Trim();
-        FieldTools.Visible = false;
-        fldset_cham_rl.Visible = true;
-        DataTable dt = new DataTable();
-        dt = rl.rl_sinhvien(username);
-        hoten.Text = "Họ và Tên : " + dt.Rows[0]["hoten"].ToString();
-        Lop.Text = "Lớp : " + dt.Rows[0]["LOP"].ToString();
-        ngaysinh.Text = "Ngày sinh : " + dt.Rows[0]["NGAY_SINH"].ToString();
-        Noisinh.Text = "Nơi sinh : " + dt.Rows[0]["NOI_SINH"].ToString();
-        get_Phieu();
-        int t_1_1 = 0;
-        DataTable dt1 = rl.rl_checkVang(username, ky);
-        int sobvang = dt1.Rows.Count;
-        t_1_1 = 10 - sobvang;// int.Parse(t_1);
-        if (t_1_1 < 0)
-        {
-            t_1_1 = 0;
-        }
-        t11.Text = t_1_1.ToString();
-    }
+    }    
     //Lấy thông tin phiếu chấm điểm
-    public void get_Phieu()
+    public void get_Phieu(string ky)
     {
-        string ky = drl_Ky.SelectedValue.ToString().Trim();
-        //username = "221183404102";
         DataTable dtb = new DataTable();
         dtb = rl.rl_get_PhieuRenLuyen(username, ky);
         if (dtb.Rows.Count > 0)
@@ -245,9 +223,9 @@ public partial class RLCTCT_frm_ChamDiemRL : System.Web.UI.Page
         }
     }
     //Hàm in phiếu chấm
-    public void inPhieuCham()
+    public void inPhieuCham(string ky)
     {
-        string ky = drl_Ky.SelectedValue.ToString().Trim();
+        //string ky = drl_Ky.SelectedValue.ToString().Trim();
         //username = "221183404102";
         DataTable dtb = new DataTable();
         dtb = rl.rl_get_PhieuRenLuyen(username, ky);        
@@ -276,23 +254,34 @@ public partial class RLCTCT_frm_ChamDiemRL : System.Web.UI.Page
     {
         Response.Redirect("~/Home/Default.aspx");
     }
-
-
     protected void grv_diemth_RowCommand(object sender, GridViewCommandEventArgs e)
     {
         if (e.CommandName == "btn_Cham")
         {
-            //int dong = Convert.ToInt32(e.CommandArgument.ToString());
-            string ky = drl_Ky.SelectedValue.ToString().Trim();
+            int selected_index = int.Parse(e.CommandArgument.ToString());
+            string ky = grv_diemth.Rows[selected_index].Cells[2].Text.ToString();
+            string namhoc= grv_diemth.Rows[selected_index].Cells[3].Text.ToString();
+            int diemctct = int.Parse(grv_diemth.Rows[selected_index].Cells[5].Text.ToString());
+            if (diemctct > 0)
+            {
+                btnNopKL.Enabled = false;
+            }
+            else
+            {
+                btnNopKL.Enabled = true;
+            }
             FieldTools.Visible = false;
             fldset_cham_rl.Visible = true;
+            lbl_diemctct.Text = diemctct.ToString();
+            lbl_ky_dg.Text = namhoc.ToString();
+            lbl_ma_ky.Text = ky.ToString();
             DataTable dt = new DataTable();
             dt = rl.rl_sinhvien(username);
             hoten.Text = "Họ và Tên : " + dt.Rows[0]["hoten"].ToString();
             Lop.Text = "Lớp : " + dt.Rows[0]["LOP"].ToString();
             ngaysinh.Text = "Ngày sinh : " + dt.Rows[0]["NGAY_SINH"].ToString();
             Noisinh.Text = "Nơi sinh : " + dt.Rows[0]["NOI_SINH"].ToString();
-            get_Phieu();
+            get_Phieu(ky);
             int t_1_1 = 0;
             DataTable dt1 = rl.rl_checkVang(username, ky);
             int sobvang = dt1.Rows.Count;
@@ -304,12 +293,20 @@ public partial class RLCTCT_frm_ChamDiemRL : System.Web.UI.Page
             t11.Text = t_1_1.ToString();
         }else if(e.CommandName == "btn_phiem")
         {
+            int selected_index = int.Parse(e.CommandArgument.ToString());
+            string ky = grv_diemth.Rows[selected_index].Cells[2].Text.ToString();
             fld_inphieu.Visible = true;
-            inPhieuCham();
+            inPhieuCham(ky);
         }
     }
     protected void btn_dong_Click(object sender, EventArgs e)
     {
         fld_inphieu.Visible = false;
+    }
+
+    protected void btn_thoat_Click(object sender, EventArgs e)
+    {
+        fldset_cham_rl.Visible = false;
+        FieldTools.Visible = true;
     }
 }

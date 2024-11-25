@@ -9,12 +9,21 @@ using System.Web.UI.WebControls;
 public partial class RLCTCT_frm_ctctTongHop : System.Web.UI.Page
 {
     RenLuyen rl = new RenLuyen();
+string username = "";
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
+        if (Session["USERNAME"] != null)
         {
-            getky();
-            getKhoaHoc();
+            username = Session["USERNAME"].ToString().Trim();
+            if (!IsPostBack)
+            {
+                getky();
+                getKhoaHoc();
+            }
+        }
+        else
+        {
+            Response.Redirect("~/logout.aspx");
         }
     }
     //lấy kỳ chấm điểm

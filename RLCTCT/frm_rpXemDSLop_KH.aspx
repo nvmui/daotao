@@ -54,7 +54,7 @@
                         </tr>
                         <tr class="text-left">
                             <td>
-                                <asp:RadioButton ID="rd_ToanKhoa" runat="server" Text="Danh sách toàn khóa học" GroupName="khoa" Font-Bold="True" Checked="True" AutoPostBack="True" Visible="false" />
+                                <asp:RadioButton ID="rd_ToanKhoa" runat="server" Text="Danh sách toàn khóa học" GroupName="khoa" Font-Bold="True" AutoPostBack="True" />
                             </td>
                             <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             </td>

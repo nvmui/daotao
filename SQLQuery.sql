@@ -106,9 +106,9 @@ begin
 	select *, TRIM(Ho_Lot)+' '+TRIM(Ten) as Hoten, (case RIGHT(p.Ky_Hoc,1) when '1' then 'I' when '2' then 'II' else N'Hè' end) as HK
 	from RL_PhieuDiem p inner join RL_DIEM_TH_RENLUYEN d on p.Ma_SInh_Vien=d.MA_SINH_VIEN
 	inner join S_KY_HOC k on p.Ky_Hoc=k.MA_KY_HOC
-	where p.Ma_SInh_Vien=@masv and p.Ky_Hoc=@Ky_Hoc
+	where p.Ma_SInh_Vien=@masv and p.Ky_Hoc=@Ky_Hoc and d.KY_HOC=@Ky_Hoc
 end
---exec rl_get_PhieuRenLuyen '241183404109','241'
+--exec rl_get_PhieuRenLuyen '221183404102','241'
 --Kiểm tra vắng học
 create proc rl_checkVang
 @masv varchar(12),
@@ -282,7 +282,7 @@ begin
 	else if(@duoi7 > 0 and @diemF = 0)
 	begin
 		set @t13 = 3
-		set @t131 = 3
+		set @t132 = 3
 	end
 	else
 	begin

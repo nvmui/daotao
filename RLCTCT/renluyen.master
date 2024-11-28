@@ -4,15 +4,15 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>Trường Cao Đẳng Kinh Tế Kế Hoạch Đà Nẵng</title>  
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Trường Cao Đẳng Kinh Tế Kế Hoạch Đà Nẵng</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"></link>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <link rel="shortcut icon" type="image/png" href="../images/logocdkh.png" />
     <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
     <!--Scroll reveal CDN-->
     <script src="https://unpkg.com/scrollreveal"></script>
     <asp:ContentPlaceHolder ID="head" runat="server">
@@ -36,7 +36,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-12 col-md-12 col-lg-12">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                     <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
                     </asp:ContentPlaceHolder>
                 </div>
@@ -44,7 +44,6 @@
             <div class="row">
                 <div class="col-sm-12 col-md-12 col-lg-12">
                     <uc_footer:uc_footer ID="uc_footer" runat="server" />
-                    
                 </div>
             </div>
         </div>

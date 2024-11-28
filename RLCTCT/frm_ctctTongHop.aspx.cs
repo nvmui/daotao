@@ -12,19 +12,19 @@ public partial class RLCTCT_frm_ctctTongHop : System.Web.UI.Page
 string username = "";
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["USERNAME"] != null)
-        {
-            username = Session["USERNAME"].ToString().Trim();
+        //if (Session["USERNAME"] != null)
+        //{
+        //    username = Session["USERNAME"].ToString().Trim();
             if (!IsPostBack)
             {
                 getky();
                 getKhoaHoc();
             }
-        }
-        else
-        {
-            Response.Redirect("~/logout.aspx");
-        }
+        //}
+        //else
+        //{
+        //    Response.Redirect("~/logout.aspx");
+        //}
     }
     //lấy kỳ chấm điểm
     public void getky()
@@ -116,6 +116,7 @@ string username = "";
             }
             else
             {
+                btnNopKL.Enabled = false;
                 return;
             }
         }
@@ -133,15 +134,15 @@ string username = "";
             {
                 t1.Text = dtb.Rows[0]["T1"].ToString();
                 t11.Text = dtb.Rows[0]["T11"].ToString();
-                t12.Text = dtb.Rows[0]["T12"].ToString();
-                t121.Text = dtb.Rows[0]["T121"].ToString();
-                t122.Text = dtb.Rows[0]["T122"].ToString();
-                t123.Text = dtb.Rows[0]["T123"].ToString();
-                t124.Text = dtb.Rows[0]["T124"].ToString();
-                t125.Text = dtb.Rows[0]["T125"].ToString();
-                t13.Text = dtb.Rows[0]["T13"].ToString();
-                t131.Text = dtb.Rows[0]["T131"].ToString();
-                t132.Text = dtb.Rows[0]["T132"].ToString();
+                //t12.Text = dtb.Rows[0]["T12"].ToString();
+                //t121.Text = dtb.Rows[0]["T121"].ToString();
+                //t122.Text = dtb.Rows[0]["T122"].ToString();
+                //t123.Text = dtb.Rows[0]["T123"].ToString();
+                //t124.Text = dtb.Rows[0]["T124"].ToString();
+                //t125.Text = dtb.Rows[0]["T125"].ToString();
+                //t13.Text = dtb.Rows[0]["T13"].ToString();
+                //t131.Text = dtb.Rows[0]["T131"].ToString();
+                //t132.Text = dtb.Rows[0]["T132"].ToString();
                 t2.Text = dtb.Rows[0]["T2"].ToString();
                 t21.Text = dtb.Rows[0]["T21"].ToString();
                 t22.Text = dtb.Rows[0]["T22"].ToString();
@@ -160,27 +161,57 @@ string username = "";
                 t43.Text = dtb.Rows[0]["T43"].ToString();
                 t44.Text = dtb.Rows[0]["T44"].ToString();
                 txt_tong.Text = dtb.Rows[0]["T5TTKy"].ToString();
-                ////
-                t1lt.Text = dtb.Rows[0]["T1"].ToString();
-                t11lt.Text = dtb.Rows[0]["T11"].ToString();
-                t2lt.Text = dtb.Rows[0]["T2"].ToString();
-                t21lt.Text = dtb.Rows[0]["T21"].ToString();
-                t22lt.Text = dtb.Rows[0]["T22"].ToString();
-                t23lt.Text = dtb.Rows[0]["T23"].ToString();
-                t24lt.Text = dtb.Rows[0]["T24"].ToString();
-                t25lt.Text = dtb.Rows[0]["T25"].ToString();
-                t3lt.Text = dtb.Rows[0]["T3"].ToString();
-                t31lt.Text = dtb.Rows[0]["T31"].ToString();
-                t32lt.Text = dtb.Rows[0]["T32"].ToString();
-                t33lt.Text = dtb.Rows[0]["T33"].ToString();
-                t34lt.Text = dtb.Rows[0]["T34"].ToString();
-                t35lt.Text = dtb.Rows[0]["T35"].ToString();
-                t4lt.Text = dtb.Rows[0]["T4"].ToString();
-                t41lt.Text = dtb.Rows[0]["T41"].ToString();
-                t42lt.Text = dtb.Rows[0]["T42"].ToString();
-                t43lt.Text = dtb.Rows[0]["T43"].ToString();
-                t44lt.Text = dtb.Rows[0]["T44"].ToString();
-                txt_tonglt.Text = dtb.Rows[0]["T5TTKy"].ToString();
+                ////áp ban cán sự lớp chầm
+                t1lt.Text = dtb.Rows[0]["LTT1"].ToString();
+                t11lt.Text = dtb.Rows[0]["LTT11"].ToString();
+                t2lt.Text = dtb.Rows[0]["LTT2"].ToString();
+                t21lt.Text = dtb.Rows[0]["LTT21"].ToString();
+                t22lt.Text = dtb.Rows[0]["LTT22"].ToString();
+                t23lt.Text = dtb.Rows[0]["LTT23"].ToString();
+                t24lt.Text = dtb.Rows[0]["LTT24"].ToString();
+                t25lt.Text = dtb.Rows[0]["LTT25"].ToString();
+                t3lt.Text = dtb.Rows[0]["LTT3"].ToString();
+                t31lt.Text = dtb.Rows[0]["LTT31"].ToString();
+                t32lt.Text = dtb.Rows[0]["LTT32"].ToString();
+                t33lt.Text = dtb.Rows[0]["LTT33"].ToString();
+                t34lt.Text = dtb.Rows[0]["LTT34"].ToString();
+                t35lt.Text = dtb.Rows[0]["LTT35"].ToString();
+                t4lt.Text = dtb.Rows[0]["LTT4"].ToString();
+                t41lt.Text = dtb.Rows[0]["LTT41"].ToString();
+                t42lt.Text = dtb.Rows[0]["LTT42"].ToString();
+                t43lt.Text = dtb.Rows[0]["LTT43"].ToString();
+                t44lt.Text = dtb.Rows[0]["LTT44"].ToString();
+                txt_tonglt.Text = dtb.Rows[0]["LTT5TTKy"].ToString();
+                ///Áp ctct chấm
+                t1ct.Text = dtb.Rows[0]["CTCTT1"].ToString();
+                t11ct.Text = dtb.Rows[0]["CTCTT11"].ToString();
+                t12ct.Text = dtb.Rows[0]["T12"].ToString();
+                t121ct.Text = dtb.Rows[0]["T121"].ToString();
+                t122ct.Text = dtb.Rows[0]["T122"].ToString();
+                t123ct.Text = dtb.Rows[0]["T123"].ToString();
+                t124ct.Text = dtb.Rows[0]["T124"].ToString();
+                t125ct.Text = dtb.Rows[0]["T125"].ToString();
+                t13ct.Text = dtb.Rows[0]["T13"].ToString();
+                t131ct.Text = dtb.Rows[0]["T131"].ToString();
+                t132ct.Text = dtb.Rows[0]["T132"].ToString();
+                t2ct.Text = dtb.Rows[0]["CTCTT2"].ToString();
+                t21ct.Text = dtb.Rows[0]["CTCTT21"].ToString();
+                t22ct.Text = dtb.Rows[0]["CTCTT22"].ToString();
+                t23ct.Text = dtb.Rows[0]["CTCTT23"].ToString();
+                t24ct.Text = dtb.Rows[0]["CTCTT24"].ToString();
+                t25ct.Text = dtb.Rows[0]["CTCTT25"].ToString();
+                t3ct.Text = dtb.Rows[0]["CTCTT3"].ToString();
+                t31ct.Text = dtb.Rows[0]["CTCTT31"].ToString();
+                t32ct.Text = dtb.Rows[0]["CTCTT32"].ToString();
+                t33ct.Text = dtb.Rows[0]["CTCTT33"].ToString();
+                t34ct.Text = dtb.Rows[0]["CTCTT34"].ToString();
+                t35ct.Text = dtb.Rows[0]["CTCTT35"].ToString();
+                t4ct.Text = dtb.Rows[0]["CTCTT4"].ToString();
+                t41ct.Text = dtb.Rows[0]["CTCTT41"].ToString();
+                t42ct.Text = dtb.Rows[0]["CTCTT42"].ToString();
+                t43ct.Text = dtb.Rows[0]["CTCTT43"].ToString();
+                t44ct.Text = dtb.Rows[0]["CTCTT44"].ToString();
+                txt_tongct.Text = dtb.Rows[0]["CTCTT5TTKy"].ToString();
                 kq = 1;
             }
             else if (tthai == 2)
@@ -190,6 +221,7 @@ string username = "";
             else if (tthai == 3)
             {
                 kq = 3;
+                
             }
             else
             {
@@ -204,6 +236,12 @@ string username = "";
     }
 
     protected void btnNopKL_Click(object sender, EventArgs e)
+    {
+        fld_dskhoacham.Visible = true;
+        fldset_cham_rl.Visible = false;
+    }
+
+    protected void btnThoat_Click(object sender, EventArgs e)
     {
         fld_dskhoacham.Visible = true;
         fldset_cham_rl.Visible = false;

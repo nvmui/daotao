@@ -11,7 +11,7 @@ public partial class RLCTCT_frm_ChamDiemRL : System.Web.UI.Page
 {
     RenLuyen rl = new RenLuyen();
     //string username = "";
-    string username = "221183404102";
+    string username = "221183404104";
     protected void Page_Load(object sender, EventArgs e)
     {
         //if (Session["USERNAME"] != null)
@@ -253,8 +253,8 @@ public partial class RLCTCT_frm_ChamDiemRL : System.Web.UI.Page
             int selected_index = int.Parse(e.CommandArgument.ToString());
             string ky = grv_diemth.Rows[selected_index].Cells[2].Text.ToString();
             string namhoc= grv_diemth.Rows[selected_index].Cells[3].Text.ToString();
-            int diemctct = int.Parse(grv_diemth.Rows[selected_index].Cells[5].Text.ToString());
-            if (diemctct > 0)
+            int diemctct = int.Parse(grv_diemth.Rows[selected_index].Cells[11].Text.ToString());            
+            if (diemctct >=2)
             {
                 btnNopKL.Enabled = false;
             }

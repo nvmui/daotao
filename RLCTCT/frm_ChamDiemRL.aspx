@@ -102,18 +102,19 @@
                                             </asp:BoundField>
                                             <asp:TemplateField HeaderText="Xếp Loại" HeaderStyle-HorizontalAlign="Center" ControlStyle-Font-Size="Medium">
                                                 <ItemTemplate>
-                                                    <asp:Label runat="server" Text='<%# Eval("tenPhanloaiRL") %>' Width="10%" CssClass="text-right" />
+                                                    <asp:Label runat="server" Text='<%# Eval("tenPhanloaiRL") %>' />
                                                 </ItemTemplate>
                                                 <ControlStyle Font-Size="Medium"></ControlStyle>
                                                 <HeaderStyle HorizontalAlign="Center"></HeaderStyle>
                                                 <ItemStyle Width="10%" CssClass="text-center" />
                                             </asp:TemplateField>
                                             <asp:ButtonField ButtonType="Button" CommandName="btn_Cham" Text="Chấm điểm" >
-                                            <ItemStyle Width="10%" HorizontalAlign="Center" VerticalAlign="Middle" />
+                                            <ItemStyle Width="8%" HorizontalAlign="Center" VerticalAlign="Middle" />
                                             </asp:ButtonField>
                                             <asp:ButtonField ButtonType="Button" CommandName="btn_phiem" Text="In phiếu" >
-                                            <ItemStyle Width="10%" HorizontalAlign="Center" VerticalAlign="Middle" />
+                                            <ItemStyle Width="8%" HorizontalAlign="Center" VerticalAlign="Middle" />
                                             </asp:ButtonField>
+                                            <asp:BoundField DataField="TrangThai" />
                                         </Columns>
                                     </asp:GridView>
                                 </td>

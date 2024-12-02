@@ -8,7 +8,7 @@
                 <table align="center">
                     <tr>
                         <td colspan="2">
-                            <h4 class="text-center">TỔNG HỢP ĐIỂM RÈN LUYỆN CÁC LỚP THEO KHÓA VÀO TRƯỜNG</h4>
+                            <h4 class="text-center">DUYỆT VÀ TỔNG HỢP ĐÁNH GIÁ ĐIỂM RÈN LUYỆN</h4>
                         </td>
                     </tr>
                     <tr>

@@ -76,7 +76,7 @@
               <xs:element name="NOIDUNGDG" msprop:Generator_ColumnVarNameInTable="columnNOIDUNGDG" msprop:Generator_ColumnPropNameInRow="NOIDUNGDG" msprop:Generator_ColumnPropNameInTable="NOIDUNGDGColumn" msprop:Generator_UserColumnName="NOIDUNGDG" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
-                    <xs:maxLength value="150" />
+                    <xs:maxLength value="2147483647" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
@@ -124,6 +124,13 @@
               </xs:element>
               <xs:element name="NGAYTAO" msprop:Generator_ColumnVarNameInTable="columnNGAYTAO" msprop:Generator_ColumnPropNameInRow="NGAYTAO" msprop:Generator_ColumnPropNameInTable="NGAYTAOColumn" msprop:Generator_UserColumnName="NGAYTAO" type="xs:dateTime" minOccurs="0" />
               <xs:element name="XEP_LOAI" msprop:Generator_ColumnVarNameInTable="columnXEP_LOAI" msprop:Generator_ColumnPropNameInRow="XEP_LOAI" msprop:Generator_ColumnPropNameInTable="XEP_LOAIColumn" msprop:Generator_UserColumnName="XEP_LOAI" type="xs:int" minOccurs="0" />
+              <xs:element name="tenPhanloaiRL" msprop:Generator_ColumnVarNameInTable="columntenPhanloaiRL" msprop:Generator_ColumnPropNameInRow="tenPhanloaiRL" msprop:Generator_ColumnPropNameInTable="tenPhanloaiRLColumn" msprop:Generator_UserColumnName="tenPhanloaiRL" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="20" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
               <xs:element name="TrangThai" msprop:Generator_ColumnVarNameInTable="columnTrangThai" msprop:Generator_ColumnPropNameInRow="TrangThai" msprop:Generator_ColumnPropNameInTable="TrangThaiColumn" msprop:Generator_UserColumnName="TrangThai" type="xs:int" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>

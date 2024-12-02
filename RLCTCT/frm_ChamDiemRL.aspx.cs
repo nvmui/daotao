@@ -83,7 +83,7 @@ public partial class RLCTCT_frm_ChamDiemRL : System.Web.UI.Page
             DataTable dtb = new DataTable();
             dtb = rl.rl_get_DIEM_TH_RENLUYEN(user);
             if (dtb.Rows.Count > 0)
-            {
+            {                
                 grv_diemth.DataSource = dtb;
                 grv_diemth.DataBind();
                 fld_diem_dg.Visible = true;
@@ -225,11 +225,8 @@ public partial class RLCTCT_frm_ChamDiemRL : System.Web.UI.Page
     //Hàm in phiếu chấm
     public void inPhieuCham(string ky)
     {
-        //string ky = drl_Ky.SelectedValue.ToString().Trim();
-        //username = "221183404102";
         DataTable dtb = new DataTable();
         dtb = rl.rl_get_PhieuRenLuyen(username, ky);        
-        //DataTable dtb = new DataTable("dsTongHopLop");
         if (dtb.Rows.Count > 0)
         {
             rv_inphieu.Visible = true;
@@ -237,11 +234,6 @@ public partial class RLCTCT_frm_ChamDiemRL : System.Web.UI.Page
             rv_inphieu.LocalReport.ReportPath = Server.MapPath("rp_InPhieuCham.rdlc");
             rv_inphieu.LocalReport.DataSources.Clear();
             rv_inphieu.LocalReport.DataSources.Add(new ReportDataSource("DS_InPhieu", dtb));
-            //ReportParameter[] rpPara = new ReportParameter[] {
-            //    new ReportParameter("Thang",thang.ToString()),
-            //    new ReportParameter("Nam",nam.ToString())
-            //};
-            //rv_dsLop.LocalReport.SetParameters(rpPara);
             rv_inphieu.LocalReport.Refresh();
         }
         else

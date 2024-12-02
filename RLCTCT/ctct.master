@@ -2,15 +2,16 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <style>
+        .menu {
+            float: right;
+        }
         .menu li {
             list-style: none;
             float: left;
             margin-left: 15px;
             display: inline-block;
         }
-        .menu{
-            float: right;
-        }
+
         .home ul{
             float:left;
             text-align:left
@@ -30,11 +31,12 @@
         <div class="row">
             <div class="col-12 col-md-12 col-sm-12">
                 <br />
-                <h4><strong>THỰC HIỆN CHẤM ĐIỂM RÈN LUYỆN</strong></h4>
+                <h4><strong>QUẢN LÝ TỔNG HỢP ĐIỂM RÈN LUYỆN</strong></h4>
                 <div class="text-right">
                     <ul class="menu">
-                        <li><a href="frm_Homctct.aspx" class="btn btn-primary">Home</a></li>
+                        <li><a href="frm_Homctct.aspx" class="btn btn-primary active">Home</a></li>
                         <li><a href="frm_CTCTCham.aspx" class="btn btn-primary">Tạo kế hoạch</a></li>
+                        <li><a href="#" class="btn btn-primary">Khóa chấm điểm</a></li>
                         <li><a href="frm_ctctTongHop.aspx" class="btn btn-primary">Duyệt điểm RL</a></li>
                         <li><a href="frm_rpXemDSLop_KH.aspx" class="btn btn-primary">Báo cáo tổng hợp</a></li>
                         <li><a href="/Home/Default.aspx" class="btn btn-primary">Trờ về</a></li>

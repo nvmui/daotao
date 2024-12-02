@@ -1780,6 +1780,10 @@ Sau thời hạn trên Phòng không chịu trách nhiệm giải quyết. </Val
           <DataField>XEP_LOAI</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
+        <Field Name="tenPhanloaiRL">
+          <DataField>tenPhanloaiRL</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="TrangThai">
           <DataField>TrangThai</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>

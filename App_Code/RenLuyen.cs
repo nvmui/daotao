@@ -478,4 +478,36 @@ public class RenLuyen
         conn.Close();
         return kq;
     }
+    //Lấy danh sách lớp theo khóa học
+    public DataTable rl_getLop_KhoaHoc(string khoa)
+    {
+        cmd = new SqlCommand("rl_getLop_KhoaHoc", conn);
+        cmd.CommandType = CommandType.StoredProcedure;
+        cmd.Parameters.Add("@khoahoc", SqlDbType.VarChar, 2);
+        cmd.Parameters["@khoahoc"].Value = khoa;
+        conn.Open();
+        da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataTable dtb = new DataTable();
+        da.Fill(dtb);
+        conn.Close();
+        return dtb;
+    }
+    //Lấy danh sách điểm tổng hợp theo lớp và theo khóa học
+    public DataTable rl_getTonghop_ToanKhoa(string khoa, string lop)
+    {
+        cmd = new SqlCommand("rl_getTonghop_ToanKhoa", conn);
+        cmd.CommandType = CommandType.StoredProcedure;
+        cmd.Parameters.Add("@khoa", SqlDbType.VarChar, 2);
+        cmd.Parameters.Add("@lop", SqlDbType.VarChar, 30);
+        cmd.Parameters["@khoa"].Value = khoa;
+        cmd.Parameters["@lop"].Value = lop;
+        conn.Open();
+        da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        DataTable dtb = new DataTable();
+        da.Fill(dtb);
+        conn.Close();
+        return dtb;
+    }
 }

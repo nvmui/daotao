@@ -15,6 +15,6 @@
                 <li>Bước 5: Phòng Công tác Học sinh - Sinh viên có nhiệm vụ duyệt điểm RL và xếp loại cho sinh viên, tổng hợp báo cáo</li>
             </ul>
         </div>        
-    </div>
+    </div>    
 </asp:Content>
 

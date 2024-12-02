@@ -216,14 +216,15 @@ begin
 	set @kyhoc = (select Ky_hoc from RL_DSLopCham where id=@id)
 	select HO_LOT+' '+TEN as HOTEN, MA_SINH_VIEN, HO_LOT, TEN, NGAY_SINH, rl.LOP,KY_HOC, (case RIGHT(KY_HOC,1) when 1 then 'I' else 'II' end) as HK, 
 	NOIDUNGDG, TEN_KY_HOC, TenKhoa,
-	DIEMTC, DIEMLOP, 	DIEMKHOA,	DIEMCTCT, NGAYTAO, XEP_LOAI, TrangThai
+	DIEMTC, DIEMLOP, 	DIEMKHOA,	DIEMCTCT, NGAYTAO, XEP_LOAI,xl.tenPhanloaiRL, TrangThai
 	from RL_DIEM_TH_RENLUYEN RL inner join S_KY_HOC k on RL.KY_HOC=k.MA_KY_HOC
 	inner join S_DANH_MUC_LOP l on RL.LOP=l.Lop
 	inner join S_DANH_MUC_KHOA khoa on l.Khoa=khoa.MaKhoa
+	inner join CTSV_tblPhanLoaiDiemRenLuyen xl on rl.XEP_LOAI=xl.maPhanloaiRL
 	where rl.LOP = @lop and KY_HOC= @kyhoc order by TEN, HO_LOT
 end
 
---exec rl_GetLopCham 165
+--exec rl_GetLopCham 213
 
 ---Khoa chấm
 alter proc check_DiemHT
@@ -431,10 +432,16 @@ begin
 	CTCTT3=LTT3, CTCTT31=LTT31, CTCTT32=LTT32, CTCTT33=LTT33, CTCTT34=LTT34, CTCTT35=LTT35, CTCTT4=LTT4, CTCTT41=LTT41, CTCTT42=LTT42, CTCTT43=LTT43,
 	CTCTT44=LTT44, CTCTT5TTKy=TongKhoa
 	where Ma_SInh_Vien = @masv and Ky_Hoc=@ky and TrangThai=3
-	declare @xeploai int
+	declare @xeploai int, @xeploaix nvarchar(30)
+	---set xếp loại số
 	set @xeploai = (select (case when DIEMKHOA >=90 then 1 when DIEMKHOA >=80 then 2 when DIEMKHOA >=70 then 3 when DIEMKHOA >=60 then 4
 	when DIEMKHOA >=50 then 5 when DIEMKHOA >=30 then 6 when DIEMKHOA >=20 then 7 else 8 end)
 	from RL_DIEM_TH_RENLUYEN where MA_SINH_VIEN=@masv and KY_HOC=@ky and TrangThai=3)
+	---set xếp loại chữ
+	set @xeploaix = (select (case when DIEMKHOA >=90 then N'XS' when DIEMKHOA >=80 then N'Tốt' when DIEMKHOA >=70 then N'Khá' when DIEMKHOA >=60 then N'TBK'
+	when DIEMKHOA >=50 then N'TB' when DIEMKHOA >=30 then N'Yếu' when DIEMKHOA >=20 then N'Kém' else N'Rất kém' end)
+	from RL_DIEM_TH_RENLUYEN where MA_SINH_VIEN=@masv and KY_HOC=@ky and TrangThai=3)
+
 	print @xeploai
 	update RL_DIEM_TH_RENLUYEN set DIEMCTCT=DIEMKHOA, XEP_LOAI =@xeploai where MA_SINH_VIEN=@masv and KY_HOC=@ky and TrangThai=3
 	declare @dem int
@@ -457,26 +464,25 @@ begin
 	select @diem1 = DiemK1, @diem2 = DiemK2, @diem3 = DiemKy3, @diem4 = DiemKy4, @diem5 = DiemKy5, @diem6 = DiemKy6
 		FROM         RL_DIEM_TH_KY_RENLUYEN with (NoLock)
 		WHERE     (MA_SINH_VIEN = @masv)
-
 	if((@diem1 is null) or (@diem1='')) and ((@diem2 is null) or (@diem2='')) and ((@diem3 is null)  or (@diem3 = '')) and ((@diem4 is null)  or (@diem4 = '')) and ((@diem5 is null)  or (@diem5 = ''))
 	begin
-		update RL_DIEM_TH_KY_RENLUYEN set DiemK1 = @diemctct, KY1=@ky where MA_SINH_VIEN=@masv
+		update RL_DIEM_TH_KY_RENLUYEN set DiemK1 = @diemctct, KY1=@ky, XLK1=@xeploaix where MA_SINH_VIEN=@masv
 	end
 	else if((@diem1 <> '')) and ((@diem2 is null) or (@diem2='')) and ((@diem3 is null)  or (@diem3 = '')) and ((@diem4 is null)  or (@diem4 = '')) and ((@diem5 is null)  or (@diem5 = ''))
 	begin
-		update RL_DIEM_TH_KY_RENLUYEN set DiemK2 = @diemctct, KY2=@ky where MA_SINH_VIEN=@masv
+		update RL_DIEM_TH_KY_RENLUYEN set DiemK2 = @diemctct, KY2=@ky, XLK2=@xeploaix where MA_SINH_VIEN=@masv
 	end
 	else if((@diem1 <> '')) and ((@diem2 <> '')) and ((@diem3 is null)  or (@diem3 = '')) and ((@diem4 is null)  or (@diem4 = '')) and ((@diem5 is null)  or (@diem5 = ''))
 	begin
-		update RL_DIEM_TH_KY_RENLUYEN set DiemKy3 = @diemctct, KY3=@ky where MA_SINH_VIEN=@masv
+		update RL_DIEM_TH_KY_RENLUYEN set DiemKy3 = @diemctct, KY3=@ky, XLK3=@xeploaix where MA_SINH_VIEN=@masv
 	end
 	else if((@diem1 <> '')) and ((@diem2 <> '')) and ((@diem3 <> '')) and ((@diem4 is null)  or (@diem4 = '')) and ((@diem5 is null)  or (@diem5 = ''))
 	begin
-		update RL_DIEM_TH_KY_RENLUYEN set DiemKy4 = @diemctct, KY4=@ky where MA_SINH_VIEN=@masv
+		update RL_DIEM_TH_KY_RENLUYEN set DiemKy4 = @diemctct, KY4=@ky, XLK4=@xeploaix where MA_SINH_VIEN=@masv
 	end
 	else if((@diem1 <> '')) and ((@diem2 <> '')) and ((@diem3 <> '')) and ((@diem4 <> '')) and ((@diem5 is null)  or (@diem5 = ''))
 	begin
-		update RL_DIEM_TH_KY_RENLUYEN set DiemKy5 = @diemctct, KY5=@ky where MA_SINH_VIEN=@masv
+		update RL_DIEM_TH_KY_RENLUYEN set DiemKy5 = @diemctct, KY5=@ky, XLK5=@xeploaix where MA_SINH_VIEN=@masv
 	end
 	else if((@diem1 <> '')) and ((@diem2 <> '')) and ((@diem3 <> '')) and ((@diem4 <> '')) and ((@diem5 = '')) and ((@diem6 is null)  or (@diem6 = ''))
 	begin
@@ -557,3 +563,66 @@ begin
 	end
 end
 --exec rl_getDsctctTongHop_theokhao '241','24','834'
+---
+alter proc rl_getTonghop_ToanKhoa
+@khoa varchar(2),
+@lop varchar(30)
+--@makhoa int
+as
+begin
+	if(@lop <>'1')
+	begin
+		select rl.MA_SINH_VIEN, hs.HO_LOT, TEN, hs.NGAY_SINH, LOP, DiemK1, DiemK2, DiemKy3, DiemKy4, DiemKy5,XLK1, XLK2, XLK3, XLK4, XLK5,
+		(CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 as TongNam1,(CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 as TongNam2,
+
+		(CONVERT(float,DiemK1)+CONVERT(float,DiemK2)+convert(float,DiemKy3)+convert(float,DiemKy4)+convert(float,DiemKy5))/5 as ToanKhoa,
+		((CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 + (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 + CONVERT(float,DiemKy5))/3 as TonKhoa1,
+
+		(case when (CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 >=90 then N'XS' when (CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 >=80 then N'Tốt' when (CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 >=70 then N'Khá' when (CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 >=60 then N'TBK'
+		when (CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 >=50 then N'TB' when (CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 >=30 then N'Yếu' when (CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 >=20 then N'Kém' else 'Rất kém' end) as XLN1,
+		--xếp loại kỳ 2
+		(case when (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 >=90 then N'XS' when (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 >=80 then N'Tốt' when (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 >=70 then N'Khá' when (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 >=60 then N'TBK'
+		when (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 >=50 then N'TB' when (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 >=30 then N'Yếu' when (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 >=20 then N'Kém' else 'Rất kém' end) as XLN2,
+		--xếp loại toàn khóa
+		(case when ((CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 + (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 + CONVERT(float,DiemKy5))/3 >=90.0 then N'XS' 
+		when ((CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 + (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 + CONVERT(float,DiemKy5))/3 >=80.0 then N'Tốt' 
+		when ((CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 + (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 + CONVERT(float,DiemKy5))/3 >=70.0 then N'Khá' when ((CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 + (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 + CONVERT(float,DiemKy5))/3 >=60.0 then N'TBK'
+		when ((CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 + (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 + CONVERT(float,DiemKy5))/3 >=50.0 then N'TB' when ((CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 + (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 + CONVERT(float,DiemKy5))/3 >=30.0 then N'Yếu' 
+		when ((CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 + (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 + CONVERT(float,DiemKy5))/3 >=20.0 then N'Kém' else 'Rất kém' end) as XLTK3
+		from RL_DIEM_TH_KY_RENLUYEN rl
+		inner join D_HO_SO_SINH_VIEN hs on rl.MA_SINH_VIEN=hs.MA_SINH_VIEN
+		where ThoiHoc=0 and TamNgung=0 and RIGHT(LOP,2)=@khoa and LOP=@lop
+		print N'lop '+@lop
+	end
+	else if(@lop = '1')
+	begin		
+		select rl.MA_SINH_VIEN, hs.HO_LOT, TEN, hs.NGAY_SINH, LOP, DiemK1, DiemK2, DiemKy3, DiemKy4, DiemKy5,XLK1, XLK2, XLK3, XLK4, XLK5,
+		(CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 as TongNam1,(CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 as TongNam2,
+
+		(CONVERT(float,DiemK1)+CONVERT(float,DiemK2)+convert(float,DiemKy3)+convert(float,DiemKy4)+convert(float,DiemKy5))/5 as ToanKhoa,
+		((CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 + (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 + CONVERT(float,DiemKy5))/3 as TonKhoa1,
+
+		(case when (CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 >=90 then N'XS' when (CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 >=80 then N'Tốt' when (CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 >=70 then N'Khá' when (CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 >=60 then N'TBK'
+		when (CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 >=50 then N'TB' when (CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 >=30 then N'Yếu' when (CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 >=20 then N'Kém' else 'Rất kém' end) as XLN1,
+		--xếp loại kỳ 2
+		(case when (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 >=90 then N'XS' when (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 >=80 then N'Tốt' when (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 >=70 then N'Khá' when (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 >=60 then N'TBK'
+		when (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 >=50 then N'TB' when (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 >=30 then N'Yếu' when (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 >=20 then N'Kém' else 'Rất kém' end) as XLN2,
+		--xếp loại toàn khóa
+		(case when ((CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 + (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 + CONVERT(float,DiemKy5))/3 >=90.0 then N'XS' 
+		when ((CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 + (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 + CONVERT(float,DiemKy5))/3 >=80.0 then N'Tốt' 
+		when ((CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 + (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 + CONVERT(float,DiemKy5))/3 >=70.0 then N'Khá' when ((CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 + (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 + CONVERT(float,DiemKy5))/3 >=60.0 then N'TBK'
+		when ((CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 + (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 + CONVERT(float,DiemKy5))/3 >=50.0 then N'TB' when ((CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 + (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 + CONVERT(float,DiemKy5))/3 >=30.0 then N'Yếu' 
+		when ((CONVERT(float,DiemK1)+CONVERT(float,DiemK2))/2 + (CONVERT(float,DiemKy3)+CONVERT(float,DiemKy4))/2 + CONVERT(float,DiemKy5))/3 >=20.0 then N'Kém' else 'Rất kém' end) as XLTK3
+		from RL_DIEM_TH_KY_RENLUYEN rl
+		inner join D_HO_SO_SINH_VIEN hs on rl.MA_SINH_VIEN=hs.MA_SINH_VIEN
+		where ThoiHoc=0 and TamNgung=0 and RIGHT(LOP,2)=@khoa
+		print N'lop '+@lop
+	end
+end
+--exec rl_getTonghop_ToanKhoa '22', '1'
+alter proc rl_getLop_KhoaHoc
+@khoahoc varchar(2)
+as
+begin
+	select Lop, Lop as TenLop, KHOA_HOC, Khoa from S_DANH_MUC_LOP where KHOA_HOC= @khoahoc
+end
